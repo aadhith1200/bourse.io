@@ -4,7 +4,6 @@ import os
 import exchange_test
 
 app = Flask(__name__)
-#check
 @app.route('/')
 def home():
     if not session.get('logged_in'):
