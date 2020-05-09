@@ -61,22 +61,25 @@ def logout():
 
 def market():
 
-    ticker=[]
-    ltp=[]
-    change=[]
-    changep=[]
-    timestmp=[]
+    l=exchange_test.market()
+    ticker=l[0]
+    ltp=l[1]
+    change=l[2]
+    changep=l[3]
+    timestmp=l[4]
 
     return render_template('market.html',ln = len(ticker), ticker=ticker,ltp=ltp, change=change, changep=changep, timestmp=timestmp)
 
 @app.route('/portfolio', methods=['GET','POST'])
 def portfolio():
 
-    ticker=[]
-    qty=[]
-    timestmp=[]
+    
     global name
     nm=name
+    l=exchange_test.portfolio(nm)
+    ticker=l[0]
+    qty=l[1]
+    timestmp=l[2]
 
     return render_template('portfolio.html',nm=nm,ln = len(ticker), ticker=ticker,qty=qty, timestmp=timestmp)
 

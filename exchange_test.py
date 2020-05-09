@@ -3,7 +3,7 @@ from pathlib import Path
 app=flask.Flask(__name__)
 
 url=str(Path(__file__).parent.absolute())+"\\"
-
+market_db={'SBI':17,'HDFC':25}
 def order():
     data=json.loads(flask.request.data)
     #print(data)
@@ -399,21 +399,20 @@ def login(userid,passwd):
         return True
 
 
-def portfolio():
-    data=json.loads(flask.request.data)
-    userid=data['userid']
+def portfolio(userid):
     conn=sqlite3.connect(url+"portfolio.db")
     cur=conn.cursor()
     data=cur.execute(f"select * from {userid}")
     data=data.fetchall()
     conn.close()
-    l=[]
+    ticker=[]
+    qty=[]
+    timestmp=[]
     for i in data:
-        d={"ticker":i[0],"qty":i[1],"timestamp":i[2]}
-        l.append(d)
-        d={}
-    return json.dumps(l)
-
+        ticker.append(i[0])
+        qty.append(i[1])
+        timestmp.append(i[2])
+    return [ticker,qty,timestmp]
 
 def orderbook():
     data=json.loads(flask.request.data)
@@ -437,10 +436,21 @@ def market():
     data=cur.execute("select * from market")
     data=data.fetchall()
     conn.close()
-    l=[]
+    global market_db
+    ticker=[]
+    ltp=[]
+    change=[]
+    changep=[]
+    timestmp=[]
     for i in data:
-        d={"ticker":i[0],"price":i[1],"timestamp":i[2]}
-        l.append(d)
-        d={}
-    return json.dumps(l)
+        ticker.append(i[0])
+        change_=(i[1]-market_db[i[0]])
+        change.append(change_)
+        ltp.append(i[1])
+        timestmp.append(i[2])
+        changep.append(change_*100.0/market_db[i[0]])
+        market_db[i]=i[1]
+    return [ticker,ltp,change,changep,timestmp]
+    
+
 
