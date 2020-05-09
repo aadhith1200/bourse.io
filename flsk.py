@@ -56,6 +56,19 @@ def logout():
     session['logged_in'] = False
     return redirect(url_for('home'))
 
+
+@app.route('/market', methods=['GET','POST'])
+
+def market():
+
+    ticker=[]
+    ltp=[]
+    change=[]
+    changep=[]
+    timestmp=[]
+
+    return render_template('market.html',ln = len(ticker), ticker=ticker,ltp=ltp, change=change, changep=changep, timestmp=timestmp)
+
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     app.run(debug=True,use_reloader=False)
