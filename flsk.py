@@ -4,27 +4,34 @@ import os
 import exchange_test
 
 app = Flask(__name__)
-@app.route('/')
+name=""
+
+@app.route('/',methods=['GET', 'POST'])
 def home():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return "Hello Boss!  <a href='/logout'>Logout</a>"
+        return render_template('stock.html')
+    
+@app.route('/stock')
+def stock():
+    return render_template('stock.html',user=name)
 
-@app.route('/login', methods=['POST'])
-
+@app.route('/login', methods=['GET','POST'])
 def login():
 
     pwd = request.form['pwd'];
     user = request.form['user'];
-
+    global name
+    name=user
     if exchange_test.login(user,pwd):
         session['logged_in'] = True
+        return redirect(url_for('stock'))
     else:
         flash('wrong password!')
-
-    return home()
-
+        return home()
+    
+    
 @app.route("/signup",methods=['GET', 'POST'])
 
 def signup():
@@ -42,13 +49,12 @@ def signup():
         return render_template('signup.html')
 
 
-
 @app.route("/logout")
 
 def logout():
 
     session['logged_in'] = False
-    return home()
+    return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
