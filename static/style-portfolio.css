@@ -1,0 +1,19 @@
+
+html,body{
+background-image: url('https://www.investopedia.com/thmb/rhXpXK3pVPLlcp-RUL1iuwo4tyQ=/2120x1414/filters:fill(auto,1)/close-up-of-stock-market-data-on-digital-display-1058454392-c48e2501742f4c21ad57c25d6a087bd0.jpg');
+font-family: 'Scada', sans-serif;
+}
+
+.table{
+  width:40%;
+  opacity: 70%;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 3rem;
+}
+
+.welcome{
+  text-align: center;
+  color: white;
+  padding: 5%;
+}
