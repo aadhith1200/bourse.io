@@ -1,0 +1,37 @@
+
+.navbar{
+  padding: 1rem;
+   background-color: rgba(0,0,0,0.0);
+}
+
+.navbar-brand{
+  font-size: 2.25rem;
+  font-family: 'Russo One', sans-serif;
+}
+
+.navbar-nav{
+  font-size: 1.25rem;
+}
+
+.symbol{
+  height:2.25rem;
+  margin: 5% 7% 10%;
+}
+
+html,body{
+background-image: url('https://responsive.fxempire.com/cover/1845x1230/webp-lossy-70.q50/_fxempire_/2019/04/Stock-Market-2-3.jpg');
+font-family: 'Scada', sans-serif;
+}
+
+.welcome{
+  text-align: center;
+  color: white;
+  padding: 5%;
+}
+
+.table{
+  width:40%;
+  opacity: 70%;
+  text-align: center;
+  font-size: 1.5rem;
+}
