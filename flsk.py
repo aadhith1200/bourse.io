@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import flash, redirect, render_template, request, session, abort
+from flask import flash, redirect, render_template, request, session, abort, url_for
 import os
 import exchange_test
 
@@ -12,7 +12,7 @@ def home():
         return render_template('login.html')
     else:
         return render_template('stock.html')
-    
+
 @app.route('/stock')
 def stock():
     return render_template('stock.html',user=name)
@@ -30,8 +30,8 @@ def login():
     else:
         flash('wrong password!')
         return home()
-    
-    
+
+
 @app.route("/signup",methods=['GET', 'POST'])
 
 def signup():
@@ -71,4 +71,4 @@ def market():
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
-    app.run(debug=True,use_reloader=False)
+    app.run(debug=True,use_reloader=False,port=5000)
