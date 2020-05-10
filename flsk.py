@@ -4,7 +4,7 @@ import os
 import exchange_test
 
 app = Flask(__name__)
-name="aadhith"
+name=""
 
 @app.route('/',methods=['GET', 'POST'])
 def home():
