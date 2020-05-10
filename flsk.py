@@ -4,7 +4,7 @@ import os
 import exchange_test
 
 app = Flask(__name__)
-name=""
+name="aadhith"
 
 @app.route('/',methods=['GET', 'POST'])
 def home():
@@ -73,7 +73,7 @@ def market():
 @app.route('/portfolio', methods=['GET','POST'])
 def portfolio():
 
-    
+
     global name
     nm=name
     l=exchange_test.portfolio(nm)
@@ -82,6 +82,21 @@ def portfolio():
     timestmp=l[2]
 
     return render_template('portfolio.html',nm=nm,ln = len(ticker), ticker=ticker,qty=qty, timestmp=timestmp)
+
+@app.route('/orderbook', methods=['GET','POST'])
+def orderbook():
+
+    global name
+    nm=name
+    l=exchange_test.orderbook(nm)
+    order=l[0]
+    ord_type=l[1]
+    ticker=l[2]
+    price=l[3]
+    status_qty=l[4]
+    timestamp=l[5]
+
+    return render_template('orderbook.html',nm=nm,ln = len(ticker),order=order,ord_type=ord_type, ticker=ticker,price=price,status_qty=status_qty,timestamp=timestamp)
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)

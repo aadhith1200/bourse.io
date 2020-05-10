@@ -414,20 +414,28 @@ def portfolio(userid):
         timestmp.append(i[2])
     return [ticker,qty,timestmp]
 
-def orderbook():
-    data=json.loads(flask.request.data)
-    userid=data['userid']
+def orderbook(userid):
     conn=sqlite3.connect(url+"orders.db")
     cur=conn.cursor()
-    data=cur.execute("select ord,order_type,ticker,price,status_qty,timestamp from orders where userid=? and status_qty!=0",(userid,))
+    data=cur.execute("select ord,order_type,ticker,price,status_qty,timestamp,qty from orders where userid=? and status_qty!=0 order by timestamp",(userid,))
     data=data.fetchall()
     conn.close()
-    l=[]
+    order=[]
+    ord_type=[]
+    ticker=[]
+    price=[]
+    status_qty=[]
+    timestmp=[]
     for i in data:
-        d={"ord":i[0],"ord_type":i[1],"ticker":i[2],"price":i[3],"status_qty":i[4],"timestamp":i[5]}
-        l.append(d)
-        d={}
-    return json.dumps(l)
+        order.append(i[0])
+        ord_type.append(i[1])
+        ticker.append(i[2])
+        price.append(i[3])
+        status=f"{i[4]}/{i[6]}"
+        status_qty.append(status)
+        timestmp.append(i[5])
+
+    return [order, ord_type, ticker, price, status_qty, timestmp]
 
 
 def market():
@@ -451,6 +459,6 @@ def market():
         changep.append(change_*100.0/market_db[i[0]])
         market_db[i]=i[1]
     return [ticker,ltp,change,changep,timestmp]
-    
+
 
 
