@@ -15,6 +15,20 @@
 </head>
 
 <body>
+  
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-dark alert-dismissible msg" role="alert">
+      {{ message  }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  
   <nav class="navbar navbar-dark flex-md-nowrap shadow">
     <a class="navbar-brand col-sm-3 col-md-2" href="#"><img class="symbol" src="https://cdn.clipart.email/15cddaf3a18c3ce16dbcdf5f5b3b84cc_computer-icons-value-mb-financial-bank-market-transparent-_800-800.jpeg" alt="icon">Virtual Stock Market</a>
     <ul class="navbar-nav px-3">
@@ -50,7 +64,7 @@
 
           <tr>
             <td>Place Order</td>
-            <td><a href=""> <i class="fas fa-dollar-sign"></i> </a></td>
+            <td><a href="order"> <i class="fas fa-dollar-sign"></i> </a></td>
           </tr>
 
 
