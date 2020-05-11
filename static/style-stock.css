@@ -35,3 +35,17 @@ font-family: 'Scada', sans-serif;
   text-align: center;
   font-size: 1.5rem;
 }
+
+.alert-dark {
+    color: white;
+    background-color: #031720;
+  }
+
+  .alert {
+      opacity: .5;
+      position: relative;
+      padding: .75rem 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: .25rem;
+      text-align: center;
+  }
