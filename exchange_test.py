@@ -4,11 +4,10 @@ app=flask.Flask(__name__)
 
 url=str(Path(__file__).parent.absolute())+"\\"
 market_db={'SBI':17,'HDFC':25}
-def order():
-    data=json.loads(flask.request.data)
-    #print(data)
+def order(order,order_type,price,ticker,qty,name):
+    data={'ord':order,'order_type':order_type,'price':price,'ticker':ticker,'qty':qty,'id':name}
+    qty_init=data['qty']
     if(data['order_type']=="MRKT"):
-        #conn = psycopg2.connect("dbname=orders user = postgres password=aadhith868")
         conn=sqlite3.connect(url+"orders.db")
         cur=conn.cursor()
         if(data['ord']=="BUY"):
@@ -55,7 +54,7 @@ def order():
                             cur2.execute(f"insert into {data['id']}(ticker,qty) values('{data['ticker']}',{data['qty']})")
                             conn2.commit()
                         else:
-                            cur2.execute(f"update portfolio set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                            cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
                             conn2.commit()
 
                         cur3=conn2.cursor()
@@ -91,7 +90,7 @@ def order():
                     d_p=d_p.fetchall()[0][0]
                     d_id=d_id.fetchall()[0][0]
                     conn2.close()
-                    cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'BUY','MRKT',data['qty'],d_p,data['ticker'],'PLACED',data['qty']))
+                    cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'BUY','MRKT',qty_init,d_p,data['ticker'],'PLACED',data['qty']))
                     conn.commit()
                     conn.close()
 
@@ -147,7 +146,7 @@ def order():
                                 cur2.execute(f"insert into {d_userid}(ticker,qty) values('{data['ticker']}',{data['qty']})")
                                 conn2.commit()
                             else:
-                                cur2.execute(f"update portfolio set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                                cur2.execute(f"update {d_userid} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
                                 conn2.commit()
 
                             cur3=conn2.cursor()
@@ -183,7 +182,7 @@ def order():
                         d_p=d_p.fetchall()[0][0]
                         d_id=d_id.fetchall()[0][0]
                         conn2.close()
-                        cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'SELL','MRKT',data['qty'],d_p,data['ticker'],'PLACED',data['qty']))
+                        cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'SELL','MRKT',qty_init,d_p,data['ticker'],'PLACED',data['qty']))
                         conn.commit()
                         conn.close()
 
@@ -241,7 +240,7 @@ def order():
                             cur2.execute(f"insert into {data['id']}(ticker,qty) values('{data['ticker']}',{data['qty']})")
                             conn2.commit()
                         else:
-                            cur2.execute(f"update portfolio set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                            cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
                             conn2.commit()
 
                         cur3=conn2.cursor()
@@ -272,7 +271,7 @@ def order():
                     cur=conn.cursor()
                     d_id=cur.execute("select ord_id from orders order by ord_id DESC LIMIT 1")
                     d_id=d_id.fetchall()[0][0]
-                    cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'BUY','LMT',data['qty'],data['price'],data['ticker'],'PLACED',data['qty']))
+                    cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'BUY','LMT',qty_init,data['price'],data['ticker'],'PLACED',data['qty']))
                     conn.commit()
                     conn.close()
 
@@ -334,7 +333,7 @@ def order():
                                 cur2.execute(f"insert into {d_userid}(ticker,qty) values('{data['ticker']}',{data['qty']})")
                                 conn2.commit()
                             else:
-                                cur2.execute(f"update portfolio set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                                cur2.execute(f"update {d_userid} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
                                 conn2.commit()
                             cur3=conn2.cursor()
                             cur3.execute(f"update {data['id']} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
@@ -364,7 +363,7 @@ def order():
                         cur=conn.cursor()
                         d_id=cur.execute("select ord_id from orders order by ord_id DESC LIMIT 1")
                         d_id=d_id.fetchall()[0][0]
-                        cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'SELL','LMT',data['qty'],data['price'],data['ticker'],'PLACED',data['qty']))
+                        cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'SELL','LMT',qty_init,data['price'],data['ticker'],'PLACED',data['qty']))
                         conn.commit()
                         conn.close()
 

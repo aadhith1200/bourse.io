@@ -101,20 +101,27 @@ def orderbook():
 @app.route('/order', methods=['GET','POST'])
 
 def order():
-
+    global name
     if request.method == 'POST':
 
-        order_type = request.form['order_type']
-        trade = request.form['trade'];
-        ticker = request.form['ticker'];
-        qty = request.form['qty'];
-        price = request.form['price'];
-        
-        if qty == "1": 
-            flash('Order placed successfully !')
-            return stock()
+        order_type = str(request.form['order_type'])
+        order = str(request.form['trade']).upper()
+        ticker = str(request.form['ticker'])
+        qty = int(request.form['qty'])
+        if(order_type=='LMT'):
+            price = int(request.form['price'])
         else:
-            flash('wrong inputs!')
+            price = 'NULL'
+        print(order_type,order,ticker,qty,price,name)
+        out=exchange_test.order(order,order_type,price,ticker,qty,name)
+        if out['status'] == "placed":
+            flash('Order placed successfully!, Check your orderbook!')
+            return stock()
+        elif out['status'] == "insufficient":
+            flash('Insufficient Funds!')
+            return render_template('order.html')
+        else:
+            flash('Incorrect Inputs!')
             return render_template('order.html')
 
     else:
