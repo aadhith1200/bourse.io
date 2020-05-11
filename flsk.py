@@ -98,6 +98,29 @@ def orderbook():
 
     return render_template('orderbook.html',nm=nm,ln = len(ticker),order=order,ord_type=ord_type, ticker=ticker,price=price,status_qty=status_qty,timestamp=timestamp)
 
+@app.route('/order', methods=['GET','POST'])
+
+def order():
+
+    if request.method == 'POST':
+
+        order_type = request.form['order_type']
+        trade = request.form['trade'];
+        ticker = request.form['ticker'];
+        qty = request.form['qty'];
+        price = request.form['price'];
+        
+        if qty == "1": 
+            flash('Order placed successfully !')
+            return stock()
+        else:
+            flash('wrong inputs!')
+            return render_template('order.html')
+
+    else:
+        return render_template('order.html')
+
+
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     app.run(debug=True,use_reloader=False,port=5000)
