@@ -460,4 +460,27 @@ def market():
     return [ticker,ltp,change,changep,timestmp]
 
 
+def funds_disp(name):
+    conn=sqlite3.connect(url+"users.db")
+    cur=conn.cursor()
+    cur.execute(f"select funds from users where userid='{name}'")
+    data=cur.fetchone()
+    conn.close()
+    return data[0]
+
+def funds_update(name,fund,flag):
+    conn=sqlite3.connect(url+"users.db")
+    cur=conn.cursor()
+    print(fund,name)
+    print(f"update users set funds=funds+{fund} where userid='{name}'")
+    if(flag=="A"):
+        cur.execute(f"update users set funds=funds+{fund} where userid='{name}'")
+    elif(flag=="W"):
+        cur.execute(f"update users set funds=funds-{fund} where userid='{name}'")
+    conn.commit()
+    conn.close()
+    return "success"
+
+
+
 

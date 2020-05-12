@@ -4,7 +4,6 @@ import os
 import exchange_test
 
 app = Flask(__name__)
-name=""
 #
 @app.route('/',methods=['GET', 'POST'])
 def home():
@@ -15,19 +14,18 @@ def home():
 
 @app.route('/stock')
 def stock():
-    
+
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return render_template('stock.html',user=name)
+        return render_template('stock.html',user=session.get('user_name'))
 
 @app.route('/login', methods=['GET','POST'])
 def login():
 
     pwd = request.form['pwd'];
     user = request.form['user'];
-    global name
-    name=user
+    session['user_name']=user
     if exchange_test.login(user,pwd):
         session['logged_in'] = True
         return redirect(url_for('stock'))
@@ -58,6 +56,7 @@ def signup():
 def logout():
 
     session['logged_in'] = False
+    session['user_name'] = ""
     return redirect(url_for('home'))
 
 
@@ -67,7 +66,7 @@ def market():
 
     if not session.get('logged_in'):
         return render_template('login.html')
-    
+
     else:
         l=exchange_test.market()
         ticker=l[0]
@@ -83,10 +82,9 @@ def portfolio():
 
     if not session.get('logged_in'):
         return render_template('login.html')
-    
+
     else:
-        global name
-        nm=name
+        nm=session.get('user_name')
         l=exchange_test.portfolio(nm)
         ticker=l[0]
         qty=l[1]
@@ -99,10 +97,9 @@ def orderbook():
 
     if not session.get('logged_in'):
         return render_template('login.html')
-    
+
     else:
-        global name
-        nm=name
+        nm=session.get('user_name')
         l=exchange_test.orderbook(nm)
         order=l[0]
         ord_type=l[1]
@@ -116,12 +113,11 @@ def orderbook():
 @app.route('/order', methods=['GET','POST'])
 
 def order():
-    
+
     if not session.get('logged_in'):
         return render_template('login.html')
-    
+
     else:
-        global name
         if request.method == 'POST':
 
             order_type = str(request.form['order_type'])
@@ -133,7 +129,7 @@ def order():
             else:
                 price = 'NULL'
             print(order_type,order,ticker,qty,price,name)
-            out=exchange_test.order(order,order_type,price,ticker,qty,name)
+            out=exchange_test.order(order,order_type,price,ticker,qty,session.get('user_name'))
             if out['status'] == "placed":
                 flash('Order placed successfully!, Check your orderbook!')
                 return stock()
@@ -156,21 +152,26 @@ def fund():
 
     else:
 
-        funds=100
+        funds=exchange_test.funds_disp(session.get('user_name'))
         if request.method == 'POST':
 
-            fnd = request.form['fund'];
-        
-            if fnd == "1":
-                flash('Fund added successfully !')
-                return stock()
+            fnd = int(request.form['fund'])
+            flag = request.form['flag']
+            print(fnd,flag)
+            if exchange_test.funds_update(session.get("user_name"),fnd,flag[0]) == "success":
+                if(flag=="Add"):
+                    flash("Funds added successfully")
+                    return stock()
+                elif(flag=="Withdraw"):
+                    flash("Funds withdrawn successfully")
+                    return stock()
             else:
-                flash('wrong input !')
+                flash('Wrong Input!')
                 return render_template('fund.html',funds=funds)
 
-        else:        
+        else:
             return render_template('fund.html',funds=funds)
-        
+
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     app.run(debug=True,use_reloader=False,port=5000)
