@@ -1,4 +1,6 @@
 import flask,json,psycopg2,sqlite3
+from mailer import Mailer
+from mailer import Message
 from pathlib import Path
 app=flask.Flask(__name__)
 
@@ -371,12 +373,12 @@ def order(order,order_type,price,ticker,qty,name):
     return(d)
 
 
-def register(userid,passwd,name,funds):
-    data={'userid':userid,'password':passwd,'name':name,'funds':funds}
+def register(userid,passwd,name,funds,email):
+    data={'userid':userid,'password':passwd,'name':name,'funds':funds,'email':email}
     conn=sqlite3.connect(url+"users.db")
-    uc=conn.execute("select userid from users where userid=?",(data['userid'],))
+    uc=conn.execute("select userid from users where userid=? or email=?",(data['userid'],data['email']))
     if(len(uc.fetchall())==0):
-        conn.execute("insert into users values(?,?,?,?)",(data['userid'],data['password'],data['name'],data['funds']))
+        conn.execute("insert into users values(?,?,?,?,?)",(data['userid'],data['password'],data['name'],data['funds'],data['email']))
         conn.commit()
         conn=sqlite3.connect(url+"portfolio.db")
         cur=conn.cursor()
@@ -471,8 +473,6 @@ def funds_disp(name):
 def funds_update(name,fund,flag):
     conn=sqlite3.connect(url+"users.db")
     cur=conn.cursor()
-    print(fund,name)
-    print(f"update users set funds=funds+{fund} where userid='{name}'")
     if(flag=="A"):
         cur.execute(f"update users set funds=funds+{fund} where userid='{name}'")
     elif(flag=="W"):
@@ -481,6 +481,39 @@ def funds_update(name,fund,flag):
     conn.close()
     return "success"
 
+def forgot_password(email):
+    conn =sqlite3.connect(url+"users.db")
+    cur = conn.cursor()
+    cur.execute(f"select email,userid from users where email='{email}'")
+    data=cur.fetchone()
+    conn.close()
+    if(len(data)==0):
+        return "0"
+    else:
+        send="miniaturestockexchange@gmail.com"
+        recver=email
+        message = Message(From=send,
+                  To=recver)
+        message.Subject = "Reset Password"
+        message.Html = """<p>Hello!
+            Here is the <a href="http://localhost:5000/reset-password">link</a> to reset your password.</p>"""
+        #try:
+        sender = Mailer('smtp.gmail.com',use_tls=True,usr=send,pwd='ministockexchange')
+        sender.send(message)
+        return data[1]
+        #except:
+        #    print("error in sending mail!")
+        #    return "1"
 
 
+def reset_password(pwd,cpwd,name):
+    conn =sqlite3.connect(url+"users.db")
+    cur = conn.cursor()
+    if(pwd==cpwd):
+        cur.execute(f"update users set password='{pwd}' where userid='{name}'")
+        conn.commit()
+        conn.close()
+        return "success"
+    else:
+        return "no_match"
 
