@@ -494,16 +494,18 @@ def forgot_password(email):
         recver=email
         message = Message(From=send,
                   To=recver)
-        message.Subject = "Reset Password"
-        message.Html = """<p>Hello!
-            Here is the <a href="http://localhost:5000/reset-password">link</a> to reset your password.</p>"""
-        #try:
-        sender = Mailer('smtp.gmail.com',use_tls=True,usr=send,pwd='ministockexchange')
-        sender.send(message)
-        return data[1]
-        #except:
-        #    print("error in sending mail!")
-        #    return "1"
+        message.Subject = "Reset Password for Miniature Stock Exchange"
+        message.Html = """<p>Hello!<br><br>
+            Here is the <a href="http://localhost:5000/reset-password">link</a> to reset your password.<br><br>
+            Regards,<br> Miniature Stock Exchange Team</p>
+            """
+        try:
+            sender = Mailer('smtp.gmail.com',use_tls=True,usr=send,pwd='ministockexchange')
+            sender.send(message)
+            return data[1]
+        except:
+            print("error in sending mail!")
+            return "1"
 
 
 def reset_password(pwd,cpwd,name):

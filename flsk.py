@@ -178,6 +178,7 @@ def forgot_password():
         if status!="0" and status!="1":
             session['user_name']=status
             flash('The link to reset the password is sent to your mail!')
+            session['mode']='forgot_password'
             return home()
 
         elif status=="0":
@@ -192,10 +193,17 @@ def forgot_password():
 
 @app.route('/reset-password', methods=['GET','POST'])
 def reset_password():
+    try:
+        if session['mode']!='forgot_password':
+            return home()
+    except:
+        return home()
+
     if request.method == 'POST':
         status = exchange_test.reset_password(request.form.get('pwd'),request.form.get('cnf_pwd'),session.get('user_name'))
         if status=="success":
             flash('Password Changed!')
+            session['mode']=""
             return home()
 
         elif status=="no_match":
