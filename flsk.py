@@ -1,9 +1,11 @@
 from flask import Flask
 from flask import flash, redirect, render_template, request, session, abort, url_for
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import os
 import exchange_test
 
 app = Flask(__name__)
+s = URLSafeTimedSerializer('Thisisasecret!')
 @app.route('/',methods=['GET', 'POST'])
 def home():
     if not session.get('logged_in'):
@@ -173,7 +175,10 @@ def fund():
 @app.route('/forgot-password', methods=['GET','POST'])
 def forgot_password():
     if request.method == 'POST':
-        status=exchange_test.forgot_password(request.form.get('email'))
+        email = request.form['email']
+        token = s.dumps(email, salt='email-confirm')
+        link = url_for('reset_password', token=token, _external=True)
+        status=exchange_test.forgot_password(email,link)
         if status!="0" and status!="1":
             session['user_name']=status
             flash('The link to reset the password is sent to your mail!')
@@ -183,6 +188,7 @@ def forgot_password():
         elif status=="0":
             flash('Email id not found!')
             return home()
+
         elif status=="1":
             flash('Oops! Error on our part,Try again later.')
             return home()
@@ -190,12 +196,12 @@ def forgot_password():
     else:
         return render_template('forgot_password.html')
 
-@app.route('/reset-password', methods=['GET','POST'])
-def reset_password():
+@app.route('/reset-password/<token>', methods=['GET','POST'])
+def reset_password(token):
     try:
-        if session['mode']!='forgot_password':
-            return home()
-    except:
+        email = s.loads(token, salt='email-confirm', max_age=3600)
+    except SignatureExpired:
+        flash("Session Timed Out !")
         return home()
 
     if request.method == 'POST':
@@ -214,7 +220,7 @@ def reset_password():
             return home()
 
     else:
-        return render_template('reset_password.html')
+        return render_template('reset_password.html',token=token)
 
 
 

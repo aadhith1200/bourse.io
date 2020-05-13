@@ -481,7 +481,7 @@ def funds_update(name,fund,flag):
     conn.close()
     return "success"
 
-def forgot_password(email):
+def forgot_password(email,link):
     conn =sqlite3.connect(url+"users.db")
     cur = conn.cursor()
     cur.execute(f"select email,userid from users where email='{email}'")
@@ -495,9 +495,11 @@ def forgot_password(email):
         message = Message(From=send,
                   To=recver)
         message.Subject = "Reset Password for Miniature Stock Exchange"
-        message.Html = """<p>Hello!<br><br>
-            Here is the <a href="http://localhost:5000/reset-password">link</a> to reset your password.<br><br>
-            Regards,<br> Miniature Stock Exchange Team</p>
+        message.Html = f"""<p>Hello!<br><br>
+            Here is the <a href="{link}">link</a> to reset your password.<br>
+            This link will be valid for only one hour.<br><br>
+            Regards,<br> Miniature Stock Exchange Team
+            </p>
             """
         try:
             sender = Mailer('smtp.gmail.com',use_tls=True,usr=send,pwd='ministockexchange')
