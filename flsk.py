@@ -127,7 +127,6 @@ def order():
                 price = int(request.form['price'])
             else:
                 price = 'NULL'
-            print(order_type,order,ticker,qty,price,name)
             out=exchange_test.order(order,order_type,price,ticker,qty,session.get('user_name'))
             if out['status'] == "placed":
                 flash('Order placed successfully!, Check your orderbook!')
@@ -207,7 +206,7 @@ def reset_password():
             return home()
 
         elif status=="no_match":
-            flask('Password does not match')
+            flash('Password does not match')
             return render_template('reset_password.html')
 
         else:
