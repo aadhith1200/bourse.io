@@ -227,10 +227,11 @@ def reset_password(token):
 @app.route('/json')
 def check():
     d=exchange_test.test()
-    print(d)
     return(json.dumps(d))
 
-
+@app.route('/check',methods=['GET','POST'])
+def ch():
+    return (request.url.split("=")[1])
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
