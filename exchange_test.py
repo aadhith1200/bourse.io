@@ -520,4 +520,22 @@ def reset_password(pwd,cpwd,name):
         return "success"
     else:
         return "no_match"
+    
+    
+    
+def test():
+    conn=sqlite3.connect(url+"market.db")
+    cur=conn.cursor()
+    data=cur.execute("select * from market")
+    data=data.fetchall()
+    conn.close()
+    global market_db
+    d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
+    for i in data:
+        change_=(i[1]-market_db[i[0]])
+        d={"ticker":i[0], "ltp":str(i[1]), "change":str(change_), "change_p":str(change_*100.0/market_db[i[0]]), "timestmp":i[2]}
+        d_f["rows"].append(d)
+        market_db[i]=i[1]
+    return d_f
+    
 

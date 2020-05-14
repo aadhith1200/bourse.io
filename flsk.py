@@ -1,9 +1,10 @@
 from flask import Flask
-from flask import flash, redirect, render_template, request, session, abort, url_for
+from flask import flash, redirect, render_template, request, session, abort, url_for, jsonify
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import os
 import exchange_test
-
+import json
+from datetime import datetime
 app = Flask(__name__)
 s = URLSafeTimedSerializer('Thisisasecret!')
 @app.route('/',methods=['GET', 'POST'])
@@ -222,6 +223,12 @@ def reset_password(token):
     else:
         return render_template('reset_password.html',token=token)
 
+
+@app.route('/json')
+def check():
+    d=exchange_test.test()
+    print(d)
+    return(json.dumps(d))
 
 
 
