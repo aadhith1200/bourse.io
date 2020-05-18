@@ -2,6 +2,8 @@ import flask,json,psycopg2,sqlite3
 from mailer import Mailer
 from mailer import Message
 from pathlib import Path
+from datetime import datetime
+from time import time
 app=flask.Flask(__name__)
 
 url=str(Path(__file__).parent.absolute())+"\\"
@@ -53,14 +55,17 @@ def order(order,order_type,price,ticker,qty,name):
                         cur2=conn2.cursor()
                         check=cur2.execute(f"select * from {data['id']} where ticker='{data['ticker']}'")
                         if(len(check.fetchall())==0):
-                            cur2.execute(f"insert into {data['id']}(ticker,qty) values('{data['ticker']}',{data['qty']})")
+                            cur2.execute(f"insert into {data['id']}(ticker,qty,avgprice) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
                             conn2.commit()
                         else:
-                            cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                            cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'), avgprice=avgprice+{data['qty']*d_p} where ticker='{data['ticker']}'")
                             conn2.commit()
-
+                        
                         cur3=conn2.cursor()
-                        cur3.execute(f"update {d_userid} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                        cur3.execute(f"select avgprice,qty from {d_userid} where ticker='{data['ticker']}'")
+                        avglist=cur3.fetchone()
+                        avgprice=avglist[0]/avglist[1]
+                        cur3.execute(f"update {d_userid} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice={avgprice*(avglist[1]-data['qty'])} where ticker='{data['ticker']}'")
                         conn2.commit()
                         conn2.close()
                         conn4=sqlite3.connect(url+"users.db")
@@ -70,7 +75,13 @@ def order(order,order_type,price,ticker,qty,name):
                         conn4.close()
                         conn5=sqlite3.connect(url+"market.db")
                         cur5=conn5.cursor()
-                        cur5.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker=?",(d_p,data['ticker']))
+                        cur5.execute(f"select price from market where ticker='{data['ticker']}'")
+                        mrktprice=cur5.fetchone()[0]
+                        change=d_p-mrktprice
+                        change_p=(change*100)/mrktprice
+                        cur5.close()
+                        cur6=conn5.cursor()
+                        cur6.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'), change=?, change_p=?  where ticker=?",(d_p,change,change_p,data['ticker']))
                         conn5.commit()
                         conn5.close()
                         if(data['qty']<d_qty):
@@ -104,9 +115,9 @@ def order(order,order_type,price,ticker,qty,name):
                     f=1
                     orders=op.fetchall()
                     quant=data['qty']
-                    con=sqlite3.connect(url+"portfolio_"+data['id']+".db")
+                    con=sqlite3.connect(url+"portfolio.db")
                     c=con.cursor()
-                    qty_check=c.execute("select qty from portfolio where ticker=?",(data['ticker'],))
+                    qty_check=c.execute(f"select qty from {data['id']} where ticker=?",(data['ticker'],))
                     qt=qty_check.fetchone()
                     if(qt[0]<data['qty']):
                         d={"status":"insufficient"}
@@ -145,14 +156,17 @@ def order(order,order_type,price,ticker,qty,name):
                             cur2=conn2.cursor()
                             check=cur2.execute(f"select * from {d_userid} where ticker='{data['ticker']}'")
                             if(len(check.fetchall())==0):
-                                cur2.execute(f"insert into {d_userid}(ticker,qty) values('{data['ticker']}',{data['qty']})")
+                                cur2.execute(f"insert into {d_userid}(ticker,qty,avgprice) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
                                 conn2.commit()
                             else:
-                                cur2.execute(f"update {d_userid} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                                cur2.execute(f"update {d_userid} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice=avgprice+{data['qty']*d_p} where ticker='{data['ticker']}'")
                                 conn2.commit()
 
                             cur3=conn2.cursor()
-                            cur3.execute(f"update {data['id']} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                            cur3.execute(f"select avgprice,qty from {data['id']} where ticker='{data['ticker']}'")
+                            avglist=cur3.fetchone()
+                            avgprice=avglist[0]/avglist[1]
+                            cur3.execute(f"update {data['id']} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice={avgprice*(avglist[1]-data['qty'])} where ticker='{data['ticker']}'")
                             conn2.commit()
                             conn2.close()
                             conn4=sqlite3.connect(url+"users.db")
@@ -162,7 +176,13 @@ def order(order,order_type,price,ticker,qty,name):
                             conn4.close()
                             conn5=sqlite3.connect(url+"market.db")
                             cur5=conn5.cursor()
-                            cur5.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker=?",(d_p,data['ticker']))
+                            cur5.execute(f"select price from market where ticker='{data['ticker']}'")
+                            mrktprice=cur5.fetchone()[0]
+                            change=d_p-mrktprice
+                            change_p=(change*100)/mrktprice
+                            cur5.close()
+                            cur6=conn5.cursor()
+                            cur6.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'), change=?, change_p=?  where ticker=?",(d_p,change,change_p,data['ticker']))
                             conn5.commit()
                             conn5.close()
                             if(data['qty']<d_qty):
@@ -239,14 +259,16 @@ def order(order,order_type,price,ticker,qty,name):
                         cur2=conn2.cursor()
                         check=cur2.execute(f"select * from {data['id']} where ticker='{data['ticker']}'")
                         if(len(check.fetchall())==0):
-                            cur2.execute(f"insert into {data['id']}(ticker,qty) values('{data['ticker']}',{data['qty']})")
+                            cur2.execute(f"insert into {data['id']}(ticker,qty) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
                             conn2.commit()
                         else:
-                            cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                            cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice=avgprice+{data['qty']*d_p} where ticker='{data['ticker']}'")
                             conn2.commit()
-
                         cur3=conn2.cursor()
-                        cur3.execute(f"update {d_userid} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                        cur3.execute(f"select avgprice,qty from {d_userid} where ticker='{data['ticker']}'")
+                        avglist=cur3.fetchone()
+                        avgprice=avglist[0]/avglist[1]
+                        cur3.execute(f"update {d_userid} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice={avgprice*(avglist[1]-data['qty'])} where ticker='{data['ticker']}'")
                         conn2.commit()
                         conn2.close()
                         conn4=sqlite3.connect(url+"users.db")
@@ -256,7 +278,13 @@ def order(order,order_type,price,ticker,qty,name):
                         conn4.close()
                         conn5=sqlite3.connect(url+"market.db")
                         cur5=conn5.cursor()
-                        cur5.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker=?",(d_p,data['ticker']))
+                        cur5.execute(f"select price from market where ticker='{data['ticker']}'")
+                        mrktprice=cur5.fetchone()[0]
+                        change=d_p-mrktprice
+                        change_p=(change*100)/mrktprice
+                        cur5.close()
+                        cur6=conn5.cursor()
+                        cur6.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'), change=?, change_p=?  where ticker=?",(d_p,change,change_p,data['ticker']))
                         conn5.commit()
                         conn5.close()
                         if(data['qty']<d_qty):
@@ -284,12 +312,12 @@ def order(order,order_type,price,ticker,qty,name):
                 if(op):
                     f=1
                     orders=op.fetchall()
-                    print(orders)
                     quant=data['qty']
-                    con=sqlite3.connect(url+"portfolio_"+data['id']+".db")
+                    con=sqlite3.connect(url+"portfolio.db")
                     c=con.cursor()
-                    qty_check=c.execute("select qty from portfolio where ticker=?",(data['ticker'],))
-                    if(qty_check.fetchall()[0][0]<data['qty']):
+                    qty_check=c.execute(f"select qty from {data['id']} where ticker=?",(data['ticker'],))
+                    qt=qty_check.fetchone()
+                    if(qt[0]<data['qty']):
                         d={"status":"insufficient"}
                         return(d)
                     con.close()
@@ -332,13 +360,16 @@ def order(order,order_type,price,ticker,qty,name):
                             cur2=conn2.cursor()
                             check=cur2.execute(f"select * from {d_userid} where ticker='{data['ticker']}'")
                             if(len(check.fetchall())==0):
-                                cur2.execute(f"insert into {d_userid}(ticker,qty) values('{data['ticker']}',{data['qty']})")
+                                cur2.execute(f"insert into {d_userid}(ticker,qty) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
                                 conn2.commit()
                             else:
-                                cur2.execute(f"update {d_userid} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                                cur2.execute(f"update {d_userid} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice=avgprice+{data['qty']*d_p} where ticker='{data['ticker']}'")
                                 conn2.commit()
                             cur3=conn2.cursor()
-                            cur3.execute(f"update {data['id']} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{data['ticker']}'")
+                            cur3.execute(f"select avgprice,qty from {data['id']} where ticker='{data['ticker']}'")
+                            avglist=cur3.fetchone()
+                            avgprice=avglist[0]/avglist[1]
+                            cur3.execute(f"update {data['id']} set qty=qty-{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice={avgprice*(avglist[1]-data['qty'])} where ticker='{data['ticker']}'")
                             conn2.commit()
                             conn2.close()
                             conn4=sqlite3.connect(url+"users.db")
@@ -348,7 +379,13 @@ def order(order,order_type,price,ticker,qty,name):
                             conn4.close()
                             conn5=sqlite3.connect(url+"market.db")
                             cur5=conn5.cursor()
-                            cur5.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker=?",(d_p,data['ticker']))
+                            cur5.execute(f"select price from market where ticker='{data['ticker']}'")
+                            mrktprice=cur5.fetchone()[0]
+                            change=d_p-mrktprice
+                            change_p=(change*100)/mrktprice
+                            cur5.close()
+                            cur6=conn5.cursor()
+                            cur6.execute("update market set price=?, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'), change=?, change_p=?  where ticker=?",(d_p,change,change_p,data['ticker']))
                             conn5.commit()
                             conn5.close()
                             if(data['qty']<d_qty):
@@ -378,11 +415,11 @@ def register(userid,passwd,name,funds,email):
     conn=sqlite3.connect(url+"users.db")
     uc=conn.execute("select userid from users where userid=? or email=?",(data['userid'],data['email']))
     if(len(uc.fetchall())==0):
-        conn.execute("insert into users values(?,?,?,?,?)",(data['userid'],data['password'],data['name'],data['funds'],data['email']))
+        conn.execute("insert into users values(?,?,?,?,?,?)",(data['userid'],data['password'],data['name'],data['funds'],data['email'],""))
         conn.commit()
         conn=sqlite3.connect(url+"portfolio.db")
         cur=conn.cursor()
-        cur.execute(f"create table {data['userid']}(ticker text, qty int, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)")
+        cur.execute(f"create table {data['userid']}(ticker text, qty int, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, avgprice int)")
         conn.commit()
         conn.close()
         return True
@@ -399,11 +436,11 @@ def login(userid,passwd):
     else:
         return True
 
-
+'''
 def portfolio(userid):
     conn=sqlite3.connect(url+"portfolio.db")
     cur=conn.cursor()
-    data=cur.execute(f"select * from {userid}")
+    data=cur.execute(f"select * from {userid} where qty!=0")
     data=data.fetchall()
     conn.close()
     ticker=[]
@@ -414,6 +451,7 @@ def portfolio(userid):
         qty.append(i[1])
         timestmp.append(i[2])
     return [ticker,qty,timestmp]
+
 
 def orderbook(userid):
     conn=sqlite3.connect(url+"orders.db")
@@ -437,7 +475,7 @@ def orderbook(userid):
         timestmp.append(i[5])
 
     return [order, ord_type, ticker, price, status_qty, timestmp]
-
+'''
 
 def market():
     conn=sqlite3.connect(url+"market.db")
@@ -520,22 +558,145 @@ def reset_password(pwd,cpwd,name):
         return "success"
     else:
         return "no_match"
-    
-    
-    
-def test():
+
+
+def orderbook(reqtype,userid):
+    conn=sqlite3.connect(url+"orders.db")
+    if (reqtype=="open"):
+        cur=conn.cursor()
+        cur.execute("select ord,order_type,ticker,price,status_qty,timestamp,qty from orders where userid=? and status_qty!=0 order by timestamp",(userid,))
+        data=cur.fetchall()
+        cur.close()
+        conn.close()
+        d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
+        for i in data:
+            d={"order":i[0],"order_type":i[1],"ticker":i[2],"price":i[3],"qty_status":str(i[4])+"/"+str(i[6]),"timestmp":i[5]}
+            d_f["rows"].append(d)
+        return d_f
+
+    if (reqtype=="exec"):
+        cur=conn.cursor()
+        cur.execute("select ord,order_type,ticker,price,status_qty,timestamp,qty from orders where userid=? and status_qty==0 order by timestamp",(userid,))
+        data=cur.fetchall()
+        cur.close()
+        conn.close()
+        d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
+        for i in data:
+            d={"order":i[0],"order_type":i[1],"ticker":i[2],"price":i[3],"qty_status":i[6],"timestmp":i[5]}
+            d_f["rows"].append(d)
+        return d_f
+
+
+def stockdata(sname):
     conn=sqlite3.connect(url+"market.db")
     cur=conn.cursor()
-    data=cur.execute("select * from market")
-    data=data.fetchall()
+    cur.execute(f"select * from market where ticker='{sname}'")
+    data=cur.fetchone()
+    data=list(data)
+    data[-1]=str(datetime.strptime(data[-1], '%Y-%m-%d %H:%M:%S').strftime("%d %B %Y %I:%M:%S %p"))
+    data[0]=time()*1000
+    return data
+
+
+def watchlist(userid,sname,status):
+    conn=sqlite3.connect(url+"users.db")
+    cur=conn.cursor()
+    cur.execute(f"select watchlist from users where userid='{userid}'")
+    data=cur.fetchone()[0]
+    wlist=data.split(",")
+    if(sname=="0"):
+        cur.close()
+        conn.close()
+        qstring=""
+        for i in wlist:
+            qstring+="'"+i+"'"+","
+        qstring="("+qstring[:-1]+")"
+        conn2=sqlite3.connect(url+"market.db")
+        cur2=conn2.cursor()
+        cur2.execute(f"select * from market where ticker in {qstring} order by ticker")
+        data=cur2.fetchall()
+        cur2.close()
+        conn2.close()
+        d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
+        for i in data:
+             d={"ticker":i[0],"ltp":i[1],"change":i[2],"change_p":i[3],"timestmp":i[4]}
+             d_f["rows"].append(d)
+        return d_f
+    elif(status=="remove"):
+            wlist.remove(sname)
+            qstring=",".join(wlist)
+            cur.execute(f"update users set watchlist='{qstring}' where userid='{userid}'")
+            conn.commit()
+            cur.close()
+            conn.close()
+            return "success"
+    elif(status=="add"):
+        if(sname in wlist):
+            return "already exist"
+        else:
+            wlist.append(sname)
+            qstring=",".join(wlist)
+            cur.execute(f"update users set watchlist='{qstring}' where userid='{userid}'")
+            conn.commit()
+            cur.close()
+            conn.close()
+            return "success"
+
+
+def pandl(userid,status):
+    conn=sqlite3.connect(url+"portfolio.db")
+    cur=conn.cursor()
+    url1=url+"market.db"
+    url2=url+"portfolio.db"
+    cur.execute(f"attach '{url1}' as 'market'")
+    cur.execute(f"attach '{url2}' as 'port'")
+    cur.execute(f"select avgprice,qty,price,a.ticker from port.{userid} a inner join market.market b on b.ticker=a.ticker")
+    data=cur.fetchall()
     conn.close()
-    global market_db
-    d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
-    for i in data:
-        change_=(i[1]-market_db[i[0]])
-        d={"ticker":i[0], "ltp":str(i[1]), "change":str(change_), "change_p":str(change_*100.0/market_db[i[0]]), "timestmp":i[2]}
-        d_f["rows"].append(d)
-        market_db[i]=i[1]
-    return d_f
+    if(len(data)==0):
+        return "portfolio empty"
+    elif(status=="total"):
+        pl=0
+        pl_change=0
+        for i in data:
+            plc=(i[2]-(i[0]/i[1]))*i[1]
+            pl+=plc
+            pl_change+=i[0]
+        return [round(pl,3),round(plc*100/pl_change,3)]
+    elif(status=="table"):
+        d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
+        for i in data:
+             pl=(i[2]-(i[0]/i[1]))*i[1]
+             pl_change=(pl*100)/i[0]
+             d={"ticker":i[3],"change":round(pl,3),"change_p":round(pl_change,3)}
+             d_f["rows"].append(d)
+        return d_f
     
+
+def portfolio(userid):
+    conn=sqlite3.connect(url+"portfolio.db")
+    cur=conn.cursor()
+    url1=url+"market.db"
+    url2=url+"portfolio.db"
+    cur.execute(f"attach '{url1}' as 'market'")
+    cur.execute(f"attach '{url2}' as 'port'")
+    cur.execute(f"select a.ticker,price,change,change_p,qty from port.{userid} a inner join market.market b on b.ticker=a.ticker")
+    data=cur.fetchall()
+    conn.close()
+    if(len(data)==0):
+        return "portfolio empty"
+    else:
+        d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
+        for i in data:
+            d={"ticker":i[0],"ltp":i[1],"change":round(i[2],3),"change_p":round(i[3],3),"qty":i[4]}
+            d_f["rows"].append(d)
+        return d_f
+            
+    
+
+portfolio("aadhith")
+    
+
+
+
 

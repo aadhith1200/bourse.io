@@ -1,27 +1,62 @@
+.caro{
+  margin:7%;
+}
+
+.card{
+color:white;
+  background-color: #393e46;
+}
+
+#testimonials{
+  text-align: center;
+  color:white;
+}
+
+.testimonial-image{
+  width:10%;
+  border-radius: 100%;
+  margin:20px;
+}
+
+.carousel-item{
+  padding: 7% 15%;
+}
+
+.logo{
+  height:4rem;
+}
 
 .navbar{
-  padding: 1rem;
-   background-color: rgba(0,0,0,0.0);
+  padding: 1.5rem;
+  padding-left: 0;
+  background-color: #393e46;
 }
 
 .navbar-brand{
+  margin-left:2rem;
   font-size: 2.25rem;
   font-family: 'Russo One', sans-serif;
+  color: #8d9dbb;
 }
 
 .navbar-nav{
-  font-size: 1.25rem;
+  font-size: 2rem;
+      margin-left: 26rem;
+      margin-top: 1rem;
+      width: 100rem;
 }
+
 
 .symbol{
   height:2.25rem;
-  margin: 5% 7% 10%;
+  margin: auto;
+  margin-bottom: 0.5rem;
 }
 
 html,body{
-/*background: #212121;*/
-background-image: url('https://www.itl.cat/pngfile/big/157-1572191_hd-wallpapers-for-website-background-cool-background-image.jpg');
+background-color: #222831;
 font-family: 'Scada', sans-serif;
+overflow-x: hidden;
 }
 
 .welcome{
@@ -30,9 +65,19 @@ font-family: 'Scada', sans-serif;
   padding: 5%;
 }
 
+.tbl{
+  margin:3rem 0;
+}
+
+.tbl-head{
+  background-color: #121212;
+  font-size: 1.25rem;
+}
+
 .table{
   width:40%;
-  opacity: 70%;
+  color: white;
+background-color: #323232;
   text-align: center;
   font-size: 1.5rem;
 }
@@ -50,3 +95,79 @@ font-family: 'Scada', sans-serif;
       border-radius: .25rem;
       text-align: center;
   }
+
+.log{
+  margin-left: 5rem;
+
+}
+
+.container{
+  margin: 0;
+}
+
+.nav-link{
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  color: #eeeeee;
+}
+
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+input {
+  border: 1px solid transparent;
+  background-color: #222831;
+  padding: 10px;
+  font-size: 16px;
+}
+
+input[type=text] {
+  color:white;
+  width:100%;
+}
+
+input[type=submit] {
+  background-color: #d65a31;
+  color: #eeeeee;
+  cursor: pointer;
+  border-radius: 10%;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #222831;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #393e46;
+  border-bottom: 1px solid #d4d4d4;
+  color: #eeeeee;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #222831;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+.btn-light{
+  color: #eeeeee;
+  background-color: #d65a31;
+  border:0;
+}

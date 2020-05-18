@@ -1,11 +1,41 @@
+.logo {
+  height: 4rem;
+}
+
+.navbar{
+  padding: 1.5rem;
+  padding-left: 0;
+  background-color: #393e46;
+}
+
+.navbar-brand{
+  margin-left:2rem;
+  font-size: 2.25rem;
+  font-family: 'Russo One', sans-serif;
+  color: #8d9dbb;
+}
+
+.navbar-nav{
+  font-size: 2rem;
+      margin-left: 26rem;
+      margin-top: 1rem;
+      width: 100rem;
+}
+
+
+.symbol{
+  height:2.25rem;
+  margin: auto;
+  margin-bottom: 0.5rem;
+}
 
 html,body{
-background-image: url('https://www.itl.cat/pngfile/big/157-1572191_hd-wallpapers-for-website-background-cool-background-image.jpg');
+background-color: #222831;
 font-family: 'Scada', sans-serif;
+color:white;
 }
 
 .table{
-  width:40%;
   opacity: 70%;
   text-align: center;
   font-size: 1.5rem;
@@ -15,5 +45,44 @@ font-family: 'Scada', sans-serif;
 .welcome{
   text-align: center;
   color: white;
-  padding: 5%;
+  padding-top:3rem;
+}
+
+.tbl{
+  margin:5rem 0;
+}
+
+.alert-dark {
+    color: white;
+    background-color: #031720;
+  }
+
+  .alert {
+      opacity: .5;
+      position: relative;
+      padding: .75rem 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: .25rem;
+      text-align: center;
+  }
+
+.log{
+  margin-left: 5rem;
+
+}
+
+.container{
+  margin: 0;
+}
+
+.nav-link{
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  color: #eeeeee;
+}
+
+.btn-light{
+  color: #eeeeee;
+  background-color: #d65a31;
+  border:0;
 }

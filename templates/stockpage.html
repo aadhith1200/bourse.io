@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Flask App </title>
+
+  <!-- Bootstraps Java Scipts Links -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style-stockpage.css') }}">
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark ">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="https://i.ibb.co/2nC347D/logo.png" class="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="home">Home
+
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="portfolio">Portfolio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="orderbook">Order book</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="order">Order</a>
+          </li>
+          <li class="nav-item log">
+            <button type="button" name="button" class="btn btn-light" href="logout">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <br>
+  <br>
+
+  <div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="card" style="background-color:rgba(0,0,0,0);">
+        <div class="card-body">
+          <div class="col-12 jumbotron p-2 ">
+            <h1> {{sname}} </h1>
+            <h2> NSE:{{ticker}} </h2>
+            <h1 class="ltp" style="display:inline;"></h1>
+            <h6 style="display:inline;"> INR</h6>
+            <h3 class="change" style="display:inline;"></h3>
+            <h3 class="change_p" style="display:inline;"></h3><br>
+            <h7 class="last_traded"></h7>
+            <br><br><br><br>
+            <form method="post" action="http://localhost:5000/watchlist?add={{ticker}}">
+              <button id="add" href="http://localhost:5000/watchlist?stock={{ticker}}" style="width:100%;" class="btn btn-light">Add to Watchlist</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="card down" style="background-color: #393e46;;">
+        <div class="card-body pad">
+          <div class="col-12 jumbotron p-2 mid" <!-- TradingView Widget BEGIN -->
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <div class="tradingview-widget-copyright"><a href="https://in.tradingview.com/symbols/NSE-SBI/" rel="noopener" target="_blank"><span class="blue-text">SBI Profile</span></a> by TradingView</div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-profile.js" async>
+                {
+                  "symbol": "NSE:{{ticker}}",
+                  "width": "100%",
+                  "height": "235",
+                  "colorTheme": "dark",
+                  "isTransparent": true,
+                  "locale": "in"
+                }
+              </script>
+            </div>
+            <!-- TradingView Widget END -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="card" style="background-color:rgba(0,0,0,0);">
+        <div class="card-body">
+          <div class="col-12 jumbotron p-2 mx-1 ">
+            <form class="frm" action="http://localhost:5000/order" method="post">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01">Order type</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01" onchange="ddselect();" name="order_type">
+                  <option selected>Select</option>
+                  <option value="MRKT">MRKT</option>
+                  <option value="LMT">LMT</option>
+                </select>
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01"> Quantity </label>
+                </div>
+                <input id="qty" autocomplete="off" type="number" class="form-control" aria-label="ticker" aria-describedby="basic-addon1" name="qty">
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01"> Price </label>
+                </div>
+                <input id="price" type="text" autocomplete="off" class="form-control" aria-label="ticker" aria-describedby="basic-addon1" name="price">
+              </div>
+
+              <div class="form-group">
+                <input type="submit" value="Sell" class="btn float-right sell" formaction="\order?ticker={{ticker}}&ord=sell">
+              </div>
+
+              <div class="form-group">
+                <input type="submit" value="Buy" class="btn float-left buy" formaction="\order?ticker={{ticker}}&ord=buy">
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <br>
+
+  <div class="container-fluid">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="container-fluid chart" id="data-container">
+
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+
+  <!-- JQuery links  -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+  <!--High CHART LIVE  -->
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="http://code.highcharts.com/highcharts-more.js"></script>
+  <script src="http://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/themes/dark-unica.js"></script>
+
+  <!--Gauge  -->
+  <script type="text/javascript" src="http://pubnub.github.io/eon/lib/eon.js"></script>
+  <script>
+    var chart;
+
+function requestData() {
+  // Ajax call to get the Data from Flask
+  var requests = $.get('/stockdata?stock={{ticker}}');
+
+  var tm = requests.done(function(result) {
+    var series = chart.series[0],
+      shift = series.data.length > 20;
+
+    var data1 = [];
+    data1.push(result[0]);
+    data1.push(result[1]);
+
+    chart.series[0].addPoint(data1, true, shift);
+
+    $(".ltp").text("");
+    $(".ltp").text(Math.round(data1[1]));
+
+    if (result[2] > 0) {
+      $(".change").text("");
+      $(".change").text(" +" + Math.round(result[2]));
+      $(".change").css("color", "green")
+
+      $(".change_p").text("");
+      $(".change_p").text("(+" + Math.round(result[3]) + "%)");
+      $(".change_p").css("color", "green")
+    } else if (result[2] < 0) {
+      $(".change").text("");
+      $(".change").text(" -" + Math.round(result[2]));
+      $(".change").css("color", "red")
+
+      $(".change_p").text("");
+      $(".change_p").text("(-" + Math.round(result[3]) + "%)");
+      $(".change_p").css("color", "red")
+    } else {
+      $(".change").text("");
+      $(".change").text(Math.round(result[2]));
+
+
+      $(".change_p").text("");
+      $(".change_p").text(Math.round(result[3]) + "%)");
+
+    }
+
+    $(".last_traded").text("");
+    $(".last_traded").text("Last traded on " + result[4]);
+
+    // call it again after one second
+    setTimeout(requestData, 2000);
+
+  });
+}
+
+$(document).ready(function() {
+  // --------------Chart 1 ----------------------------
+  chart = new Highcharts.Chart({
+    chart: {
+      renderTo: 'data-container',
+      defaultSeriesType: 'area',
+      zoomType: 'x',
+      panning: true,
+      panKey: 'shift',
+      events: {
+        load: requestData
+      }
+    },
+    time: {
+      useUTC: false
+    },
+    title: {
+      text: "{{token}}"
+    },
+    subtitle: {
+      text: 'Click and drag to zoom in. Hold down shift key to pan.'
+    },
+    xAxis: {
+      type: 'datetime',
+      tickPixelInterval: 150,
+      maxZoom: 20 * 1000
+    },
+    yAxis: {
+      minPadding: 0.1,
+      maxPadding: 0.1,
+      title: {
+        text: 'LTP',
+        margin: 20
+      }
+    },
+    series: [{
+      color: '#d65a31',
+      lineColor: '#393e46',
+      name: 'LTP of {{ticker}}',
+      data: []
+    }]
+  });
+});
+
+// --------------Chart 1 Ends - -----------------
+
+
+function ddselect() {
+  var d = document.getElementById("inputGroupSelect01");
+  var type = d.options[d.selectedIndex].text;
+  var null_value = "NULL"
+  if (type.localeCompare("MRKT") == 0) {
+    document.getElementById("price").value = null_value;
+    document.getElementById("price").setAttribute('readonly', true);
+  }
+
+  if (type.localeCompare("LMT") == 0) {
+    document.getElementById("price").removeAttribute('readonly');
+  }
+
+}
+
+  </script>
+
+
+</body>
+
+
+</html>

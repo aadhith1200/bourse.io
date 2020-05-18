@@ -3,19 +3,54 @@
 
 <head>
   <meta charset="utf-8">
-<!--   <meta http-equiv="refresh" content="5" /> -->
-  <title>{% block title %}Virtual Stock Market{% endblock %}</title>
-  </head>
+  <!--   <meta http-equiv="refresh" content="5" /> -->
+  <title>{% block title %}Home{% endblock %}</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Scada&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/d963ca7d82.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!--  <link rel="stylesheet" href="{{ url_for('static', filename='style-stock.css') }}"> -->
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style-stock.css') }}">
 </head>
 
 <body>
+  <nav class="navbar navbar-expand-lg navbar-dark ">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="https://i.ibb.co/2nC347D/logo.png" alt="logo" class="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav">
+          <li class="nav-item ">
+            <a class="nav-link active" href="home">Home
 
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="portfolio">Portfolio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="orderbook">Orderbook</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="fund">Funds</a>
+          </li>
+          <li class="nav-item log">
+            <button type="button" name="button" class="btn btn-light" href="logout">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!--
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   {% for message in messages %}
@@ -29,60 +64,274 @@
   {% endif %}
   {% endwith %}
 
-  <nav class="navbar navbar-dark flex-md-nowrap shadow">
-    <a class="navbar-brand col-sm-3 col-md-2" href="#"><img class="symbol" src="https://cdn.clipart.email/15cddaf3a18c3ce16dbcdf5f5b3b84cc_computer-icons-value-mb-financial-bank-market-transparent-_800-800.jpeg" alt="icon">Virtual Stock Market</a>
-    <ul class="navbar-nav px-3">
-      <li class="nav-item text-nowrap">
-        <a class="nav-link" href="http://localhost:5000/logout">Sign out</a>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="row justify-content-center welcome">
-    <h1>Welcome, {{ user }}</h1>
-  </div>
-
-  <div class="row justify-content-center">
-    <table class="table table-hover table-dark">
-
-      <tbody>
-
-          <tr>
-            <td>Market</td>
-            <td><a href="market"><i class="fas fa-chart-line"></i></a></td>
-          </tr>
-
-          <tr>
-            <td>Portfolio</td>
-            <td><a href="portfolio"><i class="far fa-sticky-note"></i></a></td>
-          </tr>
-
-          <tr>
-            <td>Orderbook</td>
-            <td><a href="orderbook"><i class="fas fa-book"></i></a></td>
-          </tr>
-
-          <tr>
-            <td>Place Order</td>
-            <td><a href="order"> <i class="fas fa-dollar-sign"></i> </a></td>
-          </tr>
-
-          <tr>
-            <td>Funds</td>
-            <td><a href="fund"><i class="fas fa-coins"></i> </a></td>
-          </tr>
-
-      </tbody>
-    </table>
-  </div>
-
+  <div class="row justify-content-center tbl">
 
   </div>
+-->
 
+  <div class="row tbl justify-content-center">
+    <div class="card">
+      <div class="card-body" style="color:white;">
+        <form autocomplete="off" action="http://localhost:5000/stockpage">
+          <div class="autocomplete" style="width:300px;">
+            <input id="myInput" type="text" name="ticker" placeholder="Enter a stock's name or symbol">
+          </div>
+          <input type="submit" value="Search">
+        </form>
+      </div>
+    </div>
+  </div>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <div class="row tbl">
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <div class="card">
+        <div class="card-body" style="padding:1rem; text-align:center;">
+          <h1>Watchlist</h1>
+          <br>
+          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/watchlist" data-side-pagination="server" data-auto-refresh-interval=5>
+            <thead>
+              <tr>
+                <th data-field="ticker" data-sortable="true">Symbol</th>
+                <th data-field="ltp" data-sortable="true" data-formatter="changeFormatter">LTP</th>
+                <th data-field="change" data-sortable="true" data-formatter="changeFormatter">Change</th>
+                <th data-field="change_p" data-sortable="true" data-formatter="changeFormatter">Change %</th>
+                <th data-field="timestmp" data-sortable="true">Last Traded</th>
+                <th data-field="action" data-formatter="actionformatter"></th>
+              </tr>
+            </thead>
+          </table>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <div class="card">
+        <div class="card-body" style="padding:1rem; text-align:center;">
+          <h1>Profit and Loss</h1>
+          <h1 class="pl" style="display:inline;"></h1>
+          <h5 class="pl_change" style="display:inline;"></h5><br>
+          <h7 class="last_updated"></h7><br>
+          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/dashboard_right?type=table" data-side-pagination="server" data-auto-refresh-interval=5>
+            <thead>
+              <tr>
+                <th data-field="ticker">Symbol</th>
+                <th data-field="change" data-formatter="changeFormatter">Change</th>
+                <th data-field="change_p" data-formatter="changeFormatter">Change %</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<script src="stock.js" charset="utf-8"></script>-->
+  <script type="text/javascript"
+    src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ttSsOm7H6AyFLXc5qaLCgv8C_WYUutsl8LQpjnzgJVwPKlC8Au4guwPKM-CHXHjlsS6OpNsLHhAhcfgk-U05dSOuor8bj2rjzMJgrgiep7Lu7nBJ7IKbflsIJEjKa4HDcSON1VtzaKb0Vz5pPMDVd5WDaQWgi0WvbkUCGYgtg0PqYOxs9JUwtHtZ4pesNqfhWTPJhpdtIq-NwOSIhmOgkJrDfED8ITcbU26Yqazvzt3bGvtz0-0Yr3t0qoKgNKfP1fXADgBvPw8qmAzo9eUXzPTfPFKsdaUGdDcl_ao5S5Z4lqUjYgrwOrXEFkE4yoJg6KBXwUPTxAFZSztV7BPHb70aB8HjhSH6KKxA9N9sHk9Le243MsC5AGv9aauFdDnFKfGj-x-t7Ftvk_I9u1-WvaTRQ9mwnHxR67NtAQVlAwvQ1viQPf-4Uer38DsXxnBy3m3Hph3_L7O-VjHRpf-TM942v9ALukthc654tpQ8EDuAtJ-28HpL2hhsjKKuCnjiGeAh9GNe8UMOi5ze2P0wgYodpzoJ6Nw6fsclbg6GCa4sitdNb0ExVFoMqitqFFiHgOmSrDRale6aimhKK5xqgnWwzVr1Ku6KskUwiKsw-SWMeWBXbBo4cNRJSGXcZi7-HFT8sMcY4YHD8injHVTeddb5lHUQseP5gvGDRS4BAAfA-CyfsEVZQxIdwR0kZ-Z8Co-KwSukmJxh5r1CG7JRtvt7OXidZrx3TspxVskzItg9R5Nk9XsihdKuiTQeMNObk7mJDj8mROpZOXjaAbTcVh_ILYv7ydUG8M-BoFQA81AjzGPH9v7ovv-Yv3vUAYMTwCr6rz8Dvc6go7WW_ldmmAt22pGgGV5C5DgUAoCqHx3NMKvYgKq3W3bhwiqF6pH4981NdLSjmB_13Y4lho_RQJotGD0CHaYF14ttPZry3wm7OCIBFAvRnbgF5S6w01w26Pkj4TvksdbgJsci4_zNecHjXahtN2SerMeATa6_mJecft1Aq5CDoDEDr0W0xSC8VpgbWgQvWY8ZtjVPRUTAj2LQdSAn4ZgqycbtM2yZaYKL6Zy05VdtIr3LeSdBYqR4duDZW2JhsONO3GNBB3YAuRiSSi_5EeeEomoHP0vc7GmIIZxpF4Zdk779L43U0zd7UO1dV-WYgYCN0q6iAbr_IN42w88tjy-gYK2ADy0m_NA5V8tc7YdmaNwdFiFvfXArBmqh8ZjKhAB5HR16fO9QUg"
+    nonce="1858ec9cd053043f346396b9fafcdb05" charset="UTF-8"></script>
+  </head>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</body>
+  <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js"></script>
+  <script>
+    function autocomplete(inp, arr) {
+      /*the autocomplete function takes two arguments,
+      the text field element and an array of possible autocompleted values:*/
+      var currentFocus;
+      /*execute a function when someone writes in the text field:*/
+      inp.addEventListener("input", function(e) {
+        var a, b, i, val = this.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) {
+          return false;
+        }
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        this.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+          /*check if the item starts with the same letters as the text field value:*/
+          if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            /*create a DIV element for each matching element:*/
+            b = document.createElement("DIV");
+            /*make the matching letters bold:*/
+            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+            b.innerHTML += arr[i].substr(val.length);
+            /*insert a input field that will hold the current array item's value:*/
+            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+            /*execute a function when someone clicks on the item value (DIV element):*/
+            b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+            });
+            a.appendChild(b);
+          }
+        }
+      });
+      /*execute a function presses a key on the keyboard:*/
+      inp.addEventListener("keydown", function(e) {
+        var x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+          /*If the arrow DOWN key is pressed,
+          increase the currentFocus variable:*/
+          currentFocus++;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 38) { //up
+          /*If the arrow UP key is pressed,
+          decrease the currentFocus variable:*/
+          currentFocus--;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 13) {
+          /*If the ENTER key is pressed, prevent the form from being submitted,*/
+          e.preventDefault();
+          if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (x) x[currentFocus].click();
+          }
+        }
+      });
+
+      function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocomplete-active");
+      }
+
+      function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+          x[i].classList.remove("autocomplete-active");
+        }
+      }
+
+      function closeAllLists(elmnt) {
+        /*close all autocomplete lists in the document,
+        except the one passed as an argument:*/
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+          if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+          }
+        }
+      }
+      /*execute a function when someone clicks in the document:*/
+      document.addEventListener("click", function(e) {
+        closeAllLists(e.target);
+      });
+    }
+
+    /*An array containing all the country names in the world:*/
+    var countries = ["State Bank of India (SBIN)", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus",
+      "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde",
+      "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica",
+      "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia",
+      "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran",
+      "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein",
+      "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
+      "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau",
+      "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre & Miquelon", "Samoa", "San Marino", "Sao Tome and Principe",
+      "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts & Nevis", "St Lucia",
+      "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks & Caicos",
+      "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"
+    ];
+
+    /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+    autocomplete(document.getElementById("myInput"), countries);
+
+    function changeFormatter(value, row) {
+      if (row.change < 0) {
+        var color = '#FF0000'
+      } else if (row.change > 0) {
+        var color = '#008000'
+      } else {
+        var color = '#FFFFFF'
+      }
+      return '<div style="color: ' + color + '">' +
+        value +
+        '</div>'
+    }
+
+    function actionformatter(index, row) {
+      var html = []
+      $.each(row, function(key, value) {
+        if (key == 'ticker') {
+          html.push('<a class="remove" href="watchlist?remove=' + value + '" title="Remove"><i class="fa fa-trash"></i></a>')
+
+        }
+      })
+      return html.join('')
+    }
+
+
+    $(function() {
+      $('#table').bootstrapTable()
+    })
+
+    function requestData() {
+      // Ajax call to get the Data from Flask
+      var requests = $.get('http://localhost:5000/dashboard_right?type=total');
+
+      var tm = requests.done(function(result) {
+
+        if (result[0] > 0) {
+          $(".pl").text("");
+          $(".pl").text("+" + (result[0]));
+          $(".pl").css("color", "green")
+
+          $(".pl_change").text("");
+          $(".pl_change").text("  (+" + (result[1])+"%)");
+          $(".pl_change").css("color", "green")
+
+        } else if (result[0] < 0) {
+          $(".pl").text("");
+          $(".pl").text((result[0]));
+          $(".pl").css("color", "red")
+
+          $(".pl_change").text("");
+          $(".pl_change").text("  (" + (result[1])+"%)");
+          $(".pl_change").css("color", "red")
+
+        } else {
+          $(".pl").text("");
+          $(".pl").text((result[0]));
+
+          $(".pl_change").text("");
+          $(".pl_change").text("  ("+(result[1])+"%)");
+
+
+        }
+
+        $(".last_updated").text("");
+        $(".last_updated").text("Last updated on " + result[2]);
+
+        // call it again after one second
+        setTimeout(requestData, 2000);
+
+      });
+    }
+
+    $(document).ready(function() {
+        requestData();
+    });
+  </script>
 
 </html>

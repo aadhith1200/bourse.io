@@ -6,11 +6,21 @@
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style-login.css') }}">
   <title>{% block title %}Login{% endblock %}</title>
 </head>
 
 <body>
+ <!--  <nav class="navbar navbar-expand-lg navbar-dark ">
+    <div class="container1">
+      <a class="navbar-brand" href="#">
+        <img src="https://i.ibb.co/2nC347D/logo.png" class="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav> -->
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   {% for message in messages %}
@@ -28,7 +38,12 @@
     <div class="d-flex justify-content-center h-100">
       <div class="card">
         <div class="card-header">
-          <h3>Login</h3>
+          <br>
+           <div class="text-center">
+          <img src="https://i.ibb.co/2nC347D/logo.png" alt="logo" class="logo" style="margin:0px50px"><br>
+          </div>
+          <br>
+          <h3 style="text-align: center;">Login</h3>
 
         </div>
         <div class="card-body">

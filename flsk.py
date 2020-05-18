@@ -1,11 +1,15 @@
 from flask import Flask
-from flask import flash, redirect, render_template, request, session, abort, url_for, jsonify
+from flask import flash, redirect, render_template, request, session, abort, url_for, jsonify, make_response
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import os
 import exchange_test
 import json
 from datetime import datetime
+from flask_cors import CORS
+from time import time
+
 app = Flask(__name__)
+CORS(app)
 s = URLSafeTimedSerializer('Thisisasecret!')
 @app.route('/',methods=['GET', 'POST'])
 def home():
@@ -16,7 +20,6 @@ def home():
 
 @app.route('/stock')
 def stock():
-
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
@@ -46,7 +49,7 @@ def signup():
             return home()
 
         else:
-            flash('Username Already Exists!')
+            flash('Username or Email id Already Exists!')
             return render_template('signup.html')
 
     else:
@@ -84,15 +87,8 @@ def portfolio():
 
     if not session.get('logged_in'):
         return render_template('login.html')
-
-    else:
-        nm=session.get('user_name')
-        l=exchange_test.portfolio(nm)
-        ticker=l[0]
-        qty=l[1]
-        timestmp=l[2]
-
-        return render_template('portfolio.html',nm=nm,ln = len(ticker), ticker=ticker,qty=qty, timestmp=timestmp)
+    
+    return render_template('portfolio.html')
 
 @app.route('/orderbook', methods=['GET','POST'])
 def orderbook():
@@ -101,17 +97,8 @@ def orderbook():
         return render_template('login.html')
 
     else:
-        nm=session.get('user_name')
-        l=exchange_test.orderbook(nm)
-        order=l[0]
-        ord_type=l[1]
-        ticker=l[2]
-        price=l[3]
-        status_qty=l[4]
-        timestamp=l[5]
-
-        return render_template('orderbook.html',nm=nm,ln = len(ticker),order=order,ord_type=ord_type, ticker=ticker,price=price,status_qty=status_qty,timestamp=timestamp)
-
+        return render_template('orderbook.html')
+    
 @app.route('/order', methods=['GET','POST'])
 
 def order():
@@ -121,29 +108,26 @@ def order():
 
     else:
         if request.method == 'POST':
-
             order_type = str(request.form['order_type'])
-            order = str(request.form['trade']).upper()
-            ticker = str(request.form['ticker'])
+            order = request.args['ord'].upper()
+            ticker = request.args['ticker'].upper()
             qty = int(request.form['qty'])
             if(order_type=='LMT'):
                 price = int(request.form['price'])
             else:
                 price = 'NULL'
+            print(order,order_type,price,ticker,qty,session.get('user_name'))
             out=exchange_test.order(order,order_type,price,ticker,qty,session.get('user_name'))
-            if out['status'] == "placed":
-                flash('Order placed successfully!, Check your orderbook!')
-                return stock()
-            elif out['status'] == "insufficient":
-                flash('Insufficient Funds!')
-                return render_template('order.html')
-            else:
-                flash('Incorrect Inputs!')
-                return render_template('order.html')
-
+        if out['status'] == "PLACED":
+            flash('Order placed successfully!, Check your orderbook!')
+            print('Order placed successfully!, Check your orderbook!')
+            return stock()
+        elif out['status'] == "insufficient":
+            flash('Insufficient Funds!')
+            return stock()
         else:
-            return render_template('order.html')
-
+            flash('Incorrect Inputs!')
+            return stock()
 
 @app.route('/fund', methods=['GET','POST'])
 def fund():
@@ -224,14 +208,94 @@ def reset_password(token):
         return render_template('reset_password.html',token=token)
 
 
-@app.route('/json')
-def check():
-    d=exchange_test.test()
-    return(json.dumps(d))
+@app.route('/orderbookdata',methods=['GET','POST'])
+def orderbookdata():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    reqtype=request.args['req']
+    if(reqtype=="open"):
+        d=exchange_test.orderbook("open",session['user_name'])
+        return(json.dumps(d))
+    elif(reqtype=="exec"):
+        d=exchange_test.orderbook("exec",session['user_name'])
+        return(json.dumps(d))
+    else:
+        return "error"
+    
+@app.route('/watchlist',methods=['GET','POST'])
+def watchlist():
+    userid=session['user_name']
+    if request.method=="POST":
+        sname=request.url.split("=")[1]
+        d=exchange_test.watchlist(userid,sname,"add")
+        if(d=="already exist"):
+            print(d)
+        if(d=="success"):
+            flash("Added to Watchlist!")
+        return redirect("http://localhost:5000/")
+    
+    else:
+        url=request.url.split("=")
+        if(url[1]=="asc"):    
+            d=exchange_test.watchlist(userid,"0","0")
+            return json.dumps(d)
+        else:
+            sname=url[1]
+            d=exchange_test.watchlist(userid,sname,"remove")
+            if(d=="success"):
+                print("success")
+            return redirect("http://localhost:5000/")
+    
+    
+@app.route('/dashboard_right',methods=['GET','POST'])
+def dashboard_right():
+    userid=session['user_name']
+    if(request.url.split("=")[1]=='total'):
+        data=exchange_test.pandl(userid,'total')
+        if(data=="portfolio empty"):
+            total=[0,0,datetime.now().strftime("%d %B %Y %I:%M:%S %p")]
+            response = make_response(json.dumps(total))
+            response.content_type = 'application/json'
+            return response
+        else:
+            total=[data[0],data[1],datetime.now().strftime("%d %B %Y %I:%M:%S %p")]
+            response = make_response(json.dumps(total))
+            response.content_type = 'application/json'
+            return response
+    
+    if(request.url.split('=')[1]=='table&order'):
+        data=exchange_test.pandl(userid,'table')
+        if(data=="portfolio empty"):
+            return data
+        else:
+            return json.dumps(data)
+        
+    
+@app.route('/stockpage')
+def stockpage():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    ticker= request.args['ticker']
+    ticker=ticker.split("(")
+    sname=ticker[0][:-1]
+    tickername=ticker[1][:-1]
+    return render_template("stockpage.html",ticker=tickername,sname=sname)
 
-@app.route('/check',methods=['GET','POST'])
-def ch():
-    return (request.url.split("=")[1])
+@app.route('/stockdata')
+def stockdata():
+    ticker=request.args['stock']
+    data=exchange_test.stockdata(ticker)
+    response = make_response(json.dumps(data))
+    response.content_type = 'application/json'
+    return response
+
+@app.route('/portfoliodata')
+def portfoliodata():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    d=exchange_test.portfolio(session['user_name'])
+    return json.dumps(d)
+
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)

@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}Funds{% endblock %}</title>
+  <title>{% block title %}Fund{% endblock %}</title>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Scada&display=swap" rel="stylesheet">
@@ -12,12 +12,45 @@
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style-fund.css') }}">  -->
 <link rel="stylesheet" href="{{ url_for('static', filename='style-fund.css') }}">
-
 </head>
 
 <body>
 
+  <nav class="navbar navbar-expand-lg navbar-dark ">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="https://i.ibb.co/2nC347D/logo.png" alt="logo" class="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav">
+          <li class="nav-item ">
+            <a class="nav-link" href="/">Home
+
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="portfolio">Portfolio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="orderbook">Orderbook</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="fund">Funds</a>
+          </li>
+          <li class="nav-item log">
+            <button type="button" name="button" class="btn btn-light" href="logout">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<!--
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   {% for message in messages %}
@@ -31,10 +64,10 @@
   {% endfor %}
   {% endif %}
   {% endwith %}
+-->
 
-  <div class="container">
-    <div class="d-flex justify-content-center h-100">
-      <div class="card">
+  <div class="row justify-content-center">
+      <div class="card justify-content-center">
         <div class="card-header">
           <h3>Funds</h3>
 
@@ -42,27 +75,27 @@
         <div class="card-body">
           <form action="http://localhost:5000/fund" method="post">
             <div class="input-group form-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-coins"></i></span>
+              <div class="input-group-prepend" style="background-color:orange;">
+                <span class="input-group-text" style="color:white; background-color:#d65a31;"><i class="fas fa-coins"></i></span>
               </div>
               <input autocomplete="off" type="number" class="form-control" placeholder="Enter Amount" name="fund">
             </div>
             <div class="form-group">
-              <input type="submit" value="Add" name="flag" class="btn float-right login_btn">
+              <input type="submit" value="Add" name="flag" class="btn btn-light float-right login_btn">
             </div>
             <div class="form-group">
-              <input type="submit" value="Withdraw" name="flag" class="btn float-center login_btn withdraw">
+              <input type="submit" value="Withdraw" name="flag" class="btn float-center btn-light withdraw">
             </div>
 
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-center links">
-            Available Funds : {{ funds }}
+            Current fund : {{ funds }}
           </div>
 
         </div>
       </div>
-    </div>
+
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
