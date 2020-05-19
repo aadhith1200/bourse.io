@@ -119,7 +119,10 @@ def order(order,order_type,price,ticker,qty,name):
                     c=con.cursor()
                     qty_check=c.execute(f"select qty from {data['id']} where ticker=?",(data['ticker'],))
                     qt=qty_check.fetchone()
-                    if(qt[0]<data['qty']):
+                    if(qt==None):
+                        d={"status":"insufficient"}
+                        return(d)
+                    elif(qt[0]<data['qty']):
                         d={"status":"insufficient"}
                         return(d)
                     con.close()
@@ -317,7 +320,10 @@ def order(order,order_type,price,ticker,qty,name):
                     c=con.cursor()
                     qty_check=c.execute(f"select qty from {data['id']} where ticker=?",(data['ticker'],))
                     qt=qty_check.fetchone()
-                    if(qt[0]<data['qty']):
+                    if(qt==None):
+                        d={"status":"insufficient"}
+                        return(d)
+                    elif(qt[0]<data['qty']):
                         d={"status":"insufficient"}
                         return(d)
                     con.close()
@@ -327,6 +333,7 @@ def order(order,order_type,price,ticker,qty,name):
                         d_p=op[5]
                         d_userid=op[1]
                         d_qty=op[8]
+                        d_type=op[3]
                         if (d_qty==0):
                             continue
                         if (d_type=="MRKT"):
@@ -644,6 +651,14 @@ def checkticker(sname):
         conn.close()
         return 1
     
+def cancelorder(timestmp,userid):
+    conn=sqlite3.connect(url+"orders.db")
+    cur=conn.cursor()
+    cur.execute(f"select * from orders where timestamp='{timestmp}' and userid='{userid}'")
+    print(cur.fetchone())
+    
+    
+#cancelorder("2020-05-20 2000:20:09","aadhith")
 
 
 
