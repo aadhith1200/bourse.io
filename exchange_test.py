@@ -507,7 +507,7 @@ def orderbook(reqtype,userid):
         conn.close()
         d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
         for i in data:
-            d={"order":i[0],"order_type":i[1],"ticker":i[2],"price":i[3],"qty_status":str(i[4])+"/"+str(i[6]),"timestmp":i[5]}
+            d={"order":i[0],"order_type":i[1],"ticker":i[2],"price":round(i[3],2),"qty_status":str(i[4])+"/"+str(i[6]),"timestmp":i[5]}
             d_f["rows"].append(d)
         return d_f
 
@@ -519,7 +519,7 @@ def orderbook(reqtype,userid):
         conn.close()
         d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
         for i in data:
-            d={"order":i[0],"order_type":i[1],"ticker":i[2],"price":i[3],"qty_status":i[6],"timestmp":i[5]}
+            d={"order":i[0],"order_type":i[1],"ticker":i[2],"price":round(i[3],2),"qty_status":i[6],"timestmp":i[5]}
             d_f["rows"].append(d)
         return d_f
 
@@ -559,7 +559,7 @@ def watchlist(userid,sname,status):
         conn2.close()
         d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
         for i in data:
-             d={"ticker":i[0],"ltp":i[1],"change":i[2],"change_p":i[3],"timestmp":i[4]}
+             d={"ticker":i[0],"ltp":round(i[1],2),"change":round(i[2],2),"change_p":round(i[3],2),"timestmp":i[4]}
              d_f["rows"].append(d)
         return d_f
     elif(status=="remove"):
@@ -608,7 +608,7 @@ def pandl(userid,status):
         for i in data:
              pl=(i[2]-(i[0]/i[1]))*i[1]
              pl_change=(pl*100)/i[0]
-             d={"ticker":i[3],"change":round(pl,3),"change_p":round(pl_change,3)}
+             d={"ticker":i[3],"change":round(pl,2),"change_p":round(pl_change,2)}
              d_f["rows"].append(d)
         return d_f
     
@@ -628,7 +628,7 @@ def portfolio(userid):
     else:
         d_f={"total": len(data),"totalNotFiltered": len(data), "rows": []}
         for i in data:
-            d={"ticker":i[0],"ltp":i[1],"change":round(i[2],3),"change_p":round(i[3],3),"qty":i[4]}
+            d={"ticker":i[0],"ltp":round(i[1],2),"change":round(i[2],2),"change_p":round(i[3],2),"qty":i[4]}
             d_f["rows"].append(d)
         return d_f
             

@@ -67,7 +67,7 @@
       <div class="card-body" style="color:white;">
         <form autocomplete="off" action="/stockpage">
           <div class="autocomplete" style="width:300px;">
-            <input id="myInput" type="text" name="ticker" placeholder="Enter a stock's name or symbol">
+            <input id="myInput" type="text" name="ticker" placeholder="Search by company name">
           </div>
           <input type="submit" value="Search" class="search-button">
         </form>
@@ -232,23 +232,8 @@
       });
     }
 
-    /*An array containing all the country names in the world:*/
-    var countries = ["State Bank of India (SBIN)", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus",
-      "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde",
-      "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica",
-      "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia",
-      "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran",
-      "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein",
-      "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
-      "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau",
-      "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre & Miquelon", "Samoa", "San Marino", "Sao Tome and Principe",
-      "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts & Nevis", "St Lucia",
-      "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks & Caicos",
-      "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"
-    ];
-
-    /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-    autocomplete(document.getElementById("myInput"), countries);
+    var tickers = ['Amara Raja Batteries Limited (AMARAJABAT)', 'Asian Paints Limited (ASIANPAINT)', 'Aurobindo Pharma Limited (AUROPHARMA)', 'Bajaj Finance Limited (BAJFINANCE)', 'Bata India Limited (BATAINDIA)', 'Bharti Airtel Limited (BHARTIARTL)', 'Cipla Limited (CIPLA)', 'Colgate Palmolive Limited (COLPAL)', 'Dabur India Limited (DABUR)', 'Escorts Limited (ESCORTS)', 'Havells India Limited (HAVELLS)', 'Housing Development Finance Corporation Limited (HDFC)', 'HDFC Bank Limited (HDFCBANK)', 'HDFC Life Insurance Company Limited (HDFCLIFE)', 'Hero MotoCorp Limited (HEROMOTOCO)', 'Hindustan Unilever Limited (HINDUNILVR)', 'ICICI Lombard General Insurance Company Limited (ICICIGI)', 'Infosys Limited (INFY)', 'Jubilant Foodworks Limited (JUBLFOOD)', 'Kotak Mahindra Bank Limited (KOTAKBANK)', 'Larsen & Toubro Limited (LT)', 'Lupin Limited (LUPIN)', 'Pidilite Industries Limited (PIDILITIND)', 'PVR Limited (PVR)', 'Reliance Industries Limited (RELIANCE)', 'State Bank of India (SBIN)', 'SBI Life Insurance Company Limited (SBILIFE)', 'Siemens Limited (SIEMENS)', 'Sun Pharmaceutical Industries Limited (SUNPHARMA)', 'Tata Consultancy Services Limited (TCS)', 'Titan Company Limited (TITAN)', 'Voltas Limited (VOLTAS)'];
+    autocomplete(document.getElementById("myInput"), tickers);
 
     function changeFormatter(value, row) {
       if (row.change < 0) {
@@ -310,7 +295,7 @@
 
         } else if (result[0] < 0) {
           $(".pl").text("");
-          $(".pl").text((result[0]));
+          $(".pl").text("-" + (result[0]));
           $(".pl").css("color", "red")
 
           $(".pl_change").text("");

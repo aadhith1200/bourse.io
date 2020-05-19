@@ -261,7 +261,6 @@ def stockpage():
         return render_template('login.html')
     ticker= request.args['ticker']
     ticker=ticker.split("(")
-    print(ticker)
     if(len(ticker)!=2):
         flash("Invalid Stock")
         return redirect(url_for('home'))

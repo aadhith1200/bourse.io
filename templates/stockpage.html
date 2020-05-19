@@ -66,8 +66,8 @@
       <div class="card" style="background-color:rgba(0,0,0,0);">
         <div class="card-body">
           <div class="col-12 jumbotron p-2 ">
-            <h1 style="css-color:#eeeeee;"> {{sname}} </h1>
-            <h2 style-"css-color:#eeeeee;"> NSE:{{ticker}} </h2>
+            <h4 style="css-color:#eeeeee;"> {{sname}} </h4>
+            <h5 style-"css-color:#eeeeee;"> BSX:{{ticker}} </h5>
             <h1 class="ltp" style="display:inline;"></h1>
             <h6 style="display:inline;"> INR</h6>
             <h3 class="change" style="display:inline;"></h3>
@@ -75,7 +75,7 @@
             <h7 class="last_traded"></h7>
             <br><br><br><br>
             <form method="post" action="/watchlist?add={{ticker}}">
-              <button id="add" href="/watchlist?stock={{ticker}}" style="width:100%;" class="btn btn-light">Add to Watchlist</button>
+              <button id="add" href="/watchlist?stock={{ticker}}" style="width:100%; margin-top:10px;" class="btn btn-light">Add to Watchlist</button>
             </form>
           </div>
         </div>
@@ -203,32 +203,32 @@ function requestData() {
     chart.series[0].addPoint(data1, true, shift);
 
     $(".ltp").text("");
-    $(".ltp").text(Math.round(data1[1]));
+    $(".ltp").text((data1[1]));
     $(".ltp").css("color", "#eeeeee");
 
     if (result[2] > 0) {
       $(".change").text("");
-      $(".change").text(" +" + Math.round(result[2]));
+      $(".change").text(" +" + (result[2]));
       $(".change").css("color", "green")
 
       $(".change_p").text("");
-      $(".change_p").text(" (+" + Math.round(result[3]) + "%)");
+      $(".change_p").text(" (+" + (result[3]) + "%)");
       $(".change_p").css("color", "green")
     } else if (result[2] < 0) {
       $(".change").text("");
-      $(".change").text(" -" + Math.round(result[2]));
+      $(".change").text(" " + (result[2]));
       $(".change").css("color", "red")
 
       $(".change_p").text("");
-      $(".change_p").text(" (-" + Math.round(result[3]) + "%)");
+      $(".change_p").text(" (" + (result[3]) + "%)");
       $(".change_p").css("color", "red")
     } else {
       $(".change").text("");
-      $(".change").text(Math.round(result[2]));
+      $(".change").text((result[2]));
 
 
       $(".change_p").text("");
-      $(".change_p").text(" ("+Math.round(result[3]) + "%)");
+      $(".change_p").text(" ("+(result[3]) + "%)");
 
     }
 
