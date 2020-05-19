@@ -307,7 +307,6 @@ def stockdata():
     response = make_response(json.dumps(data))
     response.content_type = 'application/json'
     return response
-
 @app.route('/portfoliodata')
 def portfoliodata():
     if not session.get('logged_in'):
