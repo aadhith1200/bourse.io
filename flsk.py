@@ -166,10 +166,30 @@ def forgot_password():
 
 @app.route('/reset-password/<token>', methods=['GET','POST'])
 def reset_password(token):
+    if(session['logged_in']):
+        if request.method == 'POST':
+            status = exchange_test.reset_password(request.form.get('pwd'),request.form.get('cnf_pwd'),session.get('user_name'))
+            if status=="success":
+                flash('Password Changed!')
+                session['mode']=""
+                return home()
+    
+            elif status=="no_match":
+                flash('Password does not match')
+                return render_template('reset_password.html')
+
+            else:
+                flash('Oops! Something went wrong.')
+                return home()
+
+        else:
+            return render_template('reset_password.html',token="/reset-password/loggedin=true")
+        
+        
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
-    except SignatureExpired:
-        flash("Session Timed Out !")
+    except:
+        flash("Session Timed Out or Wrong URL!")
         return home()
 
     if request.method == 'POST':
