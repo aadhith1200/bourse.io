@@ -91,10 +91,9 @@ def order():
 
     else:
         if request.method == 'POST':
-            print(request.form)
-            if (request.form['order_type']!="MRKT" or request.form['order_type']!="LMT") or request.form['qty']=='' or request.form['price']=='':
+            if (request.form['order_type']!="MRKT" and request.form['order_type']!="LMT") or request.form['qty']=='' or request.form['price']=='':
                 flash("Invalid inputs")
-                return redirect(url_for("home"))
+                return redirect(f"/stockpage?ticker={request.args['sname']} ({request.args['ticker']})")
             order_type = str(request.form['order_type'])
             order = request.args['ord'].upper()
             ticker = request.args['ticker'].upper()
@@ -105,16 +104,16 @@ def order():
                 price = 'NULL'
             print(order,order_type,price,ticker,qty,session.get('user_name'))
             out=exchange_test.order(order,order_type,price,ticker,qty,session.get('user_name'))
-        if out['status'] == "PLACED":
-            flash('Order placed successfully!, Check your orderbook!')
-            print('Order placed successfully!, Check your orderbook!')
-            return stock()
-        elif out['status'] == "insufficient":
-            flash('Insufficient Funds!')
-            return stock()
-        else:
-            flash('Incorrect Inputs!')
-            return stock()
+            if out['status'] == "PLACED":
+                flash('Order placed successfully!, Check your orderbook!')
+                print('Order placed successfully!, Check your orderbook!')
+                return stock()
+            elif out['status'] == "insufficient":
+                flash('Insufficient Funds!')
+                return redirect(f"/stockpage?ticker={request.args['sname']} ({request.args['ticker']})")
+            else:
+                flash('Incorrect Inputs!')
+                return redirect(f"/stockpage?ticker={request.args['sname']} ({request.args['ticker']})")
 
 @app.route('/fund', methods=['GET','POST'])
 def fund():
