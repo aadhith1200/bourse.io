@@ -91,6 +91,9 @@ def order():
 
     else:
         if request.method == 'POST':
+            if (request.form['order_type']!="buy" or request.form['order_type']!="sell") and type(request.form['qty'])!=int:
+                flash("Invalid inputs")
+                return redirect(url_for("home"))
             order_type = str(request.form['order_type'])
             order = request.args['ord'].upper()
             ticker = request.args['ticker'].upper()
