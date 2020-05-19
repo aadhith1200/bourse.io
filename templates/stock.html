@@ -17,7 +17,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark ">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img src="https://i.ibb.co/2nC347D/logo.png" alt="logo" class="logo">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,11 +65,11 @@
   <div class="row tbl justify-content-center">
     <div class="card">
       <div class="card-body" style="color:white;">
-        <form autocomplete="off" action="http://localhost:5000/stockpage">
+        <form autocomplete="off" action="/stockpage">
           <div class="autocomplete" style="width:300px;">
             <input id="myInput" type="text" name="ticker" placeholder="Enter a stock's name or symbol">
           </div>
-          <input type="submit" value="Search">
+          <input type="submit" value="Search" class="search-button">
         </form>
       </div>
     </div>
@@ -81,7 +81,7 @@
         <div class="card-body" style="padding:1rem; text-align:center;">
           <h1>Watchlist</h1>
           <br>
-          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/watchlist" data-side-pagination="server" data-auto-refresh-interval=5>
+          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/watchlist" data-side-pagination="server" data-auto-refresh-interval=5>
             <thead>
               <tr>
                 <th data-field="ticker" data-sortable="true">Symbol</th>
@@ -105,7 +105,7 @@
           <h1 class="pl" style="display:inline;"></h1>
           <h5 class="pl_change" style="display:inline;"></h5><br>
           <h7 class="last_updated"></h7><br>
-          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/dashboard_right?type=table" data-side-pagination="server" data-auto-refresh-interval=5>
+          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/dashboard_right?type=table" data-side-pagination="server" data-auto-refresh-interval=5>
             <thead>
               <tr>
                 <th data-field="ticker">Symbol</th>
@@ -295,7 +295,7 @@
 
     function requestData() {
       // Ajax call to get the Data from Flask
-      var requests = $.get('http://localhost:5000/dashboard_right?type=total');
+      var requests = $.get('/dashboard_right?type=total');
 
       var tm = requests.done(function(result) {
 

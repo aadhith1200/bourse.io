@@ -16,7 +16,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-dark ">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img src="https://i.ibb.co/2nC347D/logo.png" class="logo">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,8 +74,8 @@
             <h3 class="change_p" style="display:inline;"></h3><br>
             <h7 class="last_traded"></h7>
             <br><br><br><br>
-            <form method="post" action="http://localhost:5000/watchlist?add={{ticker}}">
-              <button id="add" href="http://localhost:5000/watchlist?stock={{ticker}}" style="width:100%;" class="btn btn-light">Add to Watchlist</button>
+            <form method="post" action="/watchlist?add={{ticker}}">
+              <button id="add" href="/watchlist?stock={{ticker}}" style="width:100%;" class="btn btn-light">Add to Watchlist</button>
             </form>
           </div>
         </div>
@@ -110,7 +110,7 @@
       <div class="card" style="background-color:rgba(0,0,0,0);">
         <div class="card-body">
           <div class="col-12 jumbotron p-2 mx-1 ">
-            <form class="frm" action="http://localhost:5000/order" method="post">
+            <form class="frm" action="/order" method="post">
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <label class="input-group-text" for="inputGroupSelect01">Order type</label>

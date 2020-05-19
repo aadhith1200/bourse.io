@@ -80,8 +80,14 @@ color:white;
   color: #eeeeee;
 }
 
+
 .btn-light{
   color: #eeeeee;
   background-color: #d65a31;
+  border:0;
+}
+.btn-light:hover{
+  color: #d65a31;
+  background-color: #eeeeee;
   border:0;
 }

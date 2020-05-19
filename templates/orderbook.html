@@ -22,7 +22,7 @@
 
    <nav class="navbar navbar-expand-lg navbar-dark ">
      <div class="container">
-       <a class="navbar-brand" href="#">
+       <a class="navbar-brand" href="/">
          <img src="https://i.ibb.co/2nC347D/logo.png" alt="logo" class="logo">
        </a>
        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
 
    <div class="row justify-content-center tbl">
      <h3 style="text-align:center;position: relative;left: 30%;">Open Orders</h3>
-     <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/orderbookdata?req=open" data-side-pagination="server">
+     <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/orderbookdata?req=open" data-side-pagination="server">
        <thead>
          <tr>
            <th data-field="order" data-sortable="true">Order</th>
@@ -85,7 +85,7 @@
    </div>
    <div class="row justify-content-center tbl" style="margin-top:6.5rem;">
      <h3 style="text-align:center;position: relative;left: 30%;">Executed Orders</h3>
-     <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/orderbookdata?req=exec" data-side-pagination="server">
+     <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/orderbookdata?req=exec" data-side-pagination="server">
        <thead>
          <tr>
            <th data-field="order" data-sortable="true">Order</th>
