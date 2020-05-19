@@ -65,23 +65,6 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/market', methods=['GET','POST'])
-
-def market():
-
-    if not session.get('logged_in'):
-        return render_template('login.html')
-
-    else:
-        l=exchange_test.market()
-        ticker=l[0]
-        ltp=l[1]
-        change=l[2]
-        changep=l[3]
-        timestmp=l[4]
-
-        return render_template('market.html',ln = len(ticker), ticker=ticker,ltp=ltp, change=change, changep=changep, timestmp=timestmp)
-
 @app.route('/portfolio', methods=['GET','POST'])
 def portfolio():
 

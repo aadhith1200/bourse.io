@@ -436,69 +436,6 @@ def login(userid,passwd):
     else:
         return True
 
-'''
-def portfolio(userid):
-    conn=sqlite3.connect(url+"portfolio.db")
-    cur=conn.cursor()
-    data=cur.execute(f"select * from {userid} where qty!=0")
-    data=data.fetchall()
-    conn.close()
-    ticker=[]
-    qty=[]
-    timestmp=[]
-    for i in data:
-        ticker.append(i[0])
-        qty.append(i[1])
-        timestmp.append(i[2])
-    return [ticker,qty,timestmp]
-
-
-def orderbook(userid):
-    conn=sqlite3.connect(url+"orders.db")
-    cur=conn.cursor()
-    data=cur.execute("select ord,order_type,ticker,price,status_qty,timestamp,qty from orders where userid=? and status_qty!=0 order by timestamp",(userid,))
-    data=data.fetchall()
-    conn.close()
-    order=[]
-    ord_type=[]
-    ticker=[]
-    price=[]
-    status_qty=[]
-    timestmp=[]
-    for i in data:
-        order.append(i[0])
-        ord_type.append(i[1])
-        ticker.append(i[2])
-        price.append(i[3])
-        status=f"{i[4]}/{i[6]}"
-        status_qty.append(status)
-        timestmp.append(i[5])
-
-    return [order, ord_type, ticker, price, status_qty, timestmp]
-'''
-
-def market():
-    conn=sqlite3.connect(url+"market.db")
-    cur=conn.cursor()
-    data=cur.execute("select * from market")
-    data=data.fetchall()
-    conn.close()
-    global market_db
-    ticker=[]
-    ltp=[]
-    change=[]
-    changep=[]
-    timestmp=[]
-    for i in data:
-        ticker.append(i[0])
-        change_=(i[1]-market_db[i[0]])
-        change.append(change_)
-        ltp.append(i[1])
-        timestmp.append(i[2])
-        changep.append(change_*100.0/market_db[i[0]])
-        market_db[i]=i[1]
-    return [ticker,ltp,change,changep,timestmp]
-
 
 def funds_disp(name):
     conn=sqlite3.connect(url+"users.db")
@@ -606,7 +543,7 @@ def watchlist(userid,sname,status):
     try:
         wlist=data.split(",")
     except:
-        wlsit=[]
+        wlist=[]
     if(sname=="0"):
         cur.close()
         conn.close()
