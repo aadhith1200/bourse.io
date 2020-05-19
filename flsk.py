@@ -172,7 +172,7 @@ def reset_password(token):
             if status=="success":
                 flash('Password Changed!')
                 session['mode']=""
-                return home()
+                return redirect(url_for("home"))
     
             elif status=="no_match":
                 flash('Password does not match')
@@ -295,6 +295,8 @@ def stockpage():
 
 @app.route('/stockdata')
 def stockdata():
+    if not session.get('logged_in'):
+        return render_template('login.html')
     ticker=request.args['stock']
     data=exchange_test.stockdata(ticker)
     response = make_response(json.dumps(data))

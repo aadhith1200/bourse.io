@@ -86,14 +86,14 @@
         <div class="card-body" style="padding:1rem; text-align:center;">
           <h1>Watchlist</h1>
           <br>
-          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/watchlist" data-side-pagination="server" data-auto-refresh-interval=5>
+          <table class="table table-hover table-dark table-striped table-borderless" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/watchlist" data-side-pagination="server" data-auto-refresh-interval=5>
             <thead>
               <tr>
-                <th data-field="ticker" data-sortable="true">Symbol</th>
-                <th data-field="ltp" data-sortable="true" data-formatter="changeFormatter">LTP</th>
-                <th data-field="change" data-sortable="true" data-formatter="changeFormatter">Change</th>
-                <th data-field="change_p" data-sortable="true" data-formatter="change_pFormatter">Change %</th>
-                <th data-field="timestmp" data-sortable="true">Last Traded</th>
+                <th data-field="ticker" >Symbol</th>
+                <th data-field="ltp" data-formatter="changeFormatter">LTP</th>
+                <th data-field="change" data-formatter="changeFormatter">Change</th>
+                <th data-field="change_p" data-formatter="change_pFormatter">Change %</th>
+                <th data-field="timestmp" >Last Traded</th>
                 <th data-field="action" data-formatter="actionformatter"></th>
               </tr>
             </thead>
@@ -110,7 +110,7 @@
           <h1 class="pl" style="display:inline;"></h1>
           <h5 class="pl_change" style="display:inline;"></h5><br>
           <h7 class="last_updated"></h7><br>
-          <table class="table table-hover table-dark" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/dashboard_right?type=table" data-side-pagination="server" data-auto-refresh-interval=5>
+          <table class="table table-hover table-dark table-striped table-borderless" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/dashboard_right?type=table" data-side-pagination="server" data-auto-refresh-interval=5>
             <thead>
               <tr>
                 <th data-field="ticker">Symbol</th>
