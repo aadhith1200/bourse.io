@@ -3,7 +3,6 @@
 
  <head>
    <meta charset="utf-8">
-   <!--   <meta http-equiv="refresh" content="5" /> -->
    <title>{% block title %}Orderbook{% endblock %}</title>
  </head>
  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
@@ -13,7 +12,6 @@
 
  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
- <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style-orderbook.css') }}"> -->
  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
@@ -55,7 +53,7 @@
      </div>
    </nav>
 
-   <!--
+
    {% with messages = get_flashed_messages() %}
    {% if messages %}
    {% for message in messages %}
@@ -68,7 +66,7 @@
    {% endfor %}
    {% endif %}
    {% endwith %}
- -->
+ 
 
    <div class="row justify-content-center tbl">
      <h3 style="text-align:center;position: relative;left: 30%;top: 3rem;">Open Orders</h3>
