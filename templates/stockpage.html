@@ -76,8 +76,8 @@
       <div class="card" style="background-color:rgba(0,0,0,0);">
         <div class="card-body">
           <div class="col-12 jumbotron p-2 ">
-            <h4 style="css-color:#eeeeee;"> {{sname}} </h4>
-            <h5 style-"css-color:#eeeeee;"> BSX:{{ticker}} </h5>
+            <h4 class="sname" style="css-color:#eeeeee;"> {{sname}} </h4>
+            <h5 class="ticker" style-"css-color:#eeeeee;"> BSX:{{ticker}} </h5>
             <h1 class="ltp" style="display:inline;"></h1>
             <h6 style="display:inline;"> INR</h6>
             <h3 class="change" style="display:inline;"></h3>
@@ -197,6 +197,14 @@
   <script type="text/javascript" src="https://pubnub.github.io/eon/lib/eon.js"></script>
   <script>
     var chart;
+    if('{{sname}}'.length <30){
+      $(".sname").css("font-size", "1.9em");
+      $(".ticker").css("font-size", "1.6em");
+    }
+    else{
+      $(".sname").css("font-size", "1.5em");
+      $(".ticker").css("font-size", "1.2em");
+    }
 
 function requestData() {
   // Ajax call to get the Data from Flask
