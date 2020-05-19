@@ -81,6 +81,7 @@
                <th data-field="price" data-sortable="true">Price</th>
                <th data-field="qty_status" data-sortable="true">Pending Quantity</th>
                <th data-field="timestmp" data-sortable="true">Last Traded</th>
+               <th data-field="action" data-formatter="actionformatter"></th>
              </tr>
            </thead>
          </table>
@@ -130,6 +131,17 @@
          value +
          '</div>'
      }
+
+     function actionformatter(index, row) {
+      var html = []
+      $.each(row, function(key, value) {
+        if (key == 'timestmp') {
+          html.push('<a class="remove" href="cancelorder?cancel=' + value + '" title="Cancel Order"><i class="fa fa-times" style="color:red;" ></i></a>')
+        }
+      })
+      return html.join('')
+    }
+
    </script>
  </body>
 

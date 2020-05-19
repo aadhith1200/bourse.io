@@ -315,6 +315,17 @@ def portfoliodata():
     d=exchange_test.portfolio(session['user_name'])
     return json.dumps(d)
 
+@app.route('/cancelorder')
+def cancelorder():
+    timestmp=str(request.args['cancel'])
+    op=exchange_test.cancelorder(timestmp,session['user_name'])
+    if(op=="success"):
+        flash("Order Cancelled")
+        print(op)
+        return orderbook()
+    else:
+        flash("Oops! Something went wrong.")
+    
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)

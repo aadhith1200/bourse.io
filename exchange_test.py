@@ -654,11 +654,21 @@ def checkticker(sname):
 def cancelorder(timestmp,userid):
     conn=sqlite3.connect(url+"orders.db")
     cur=conn.cursor()
-    cur.execute(f"select * from orders where timestamp='{timestmp}' and userid='{userid}'")
-    print(cur.fetchone())
+    cur.execute(f"select qty,status_qty,status,ord_id from orders where timestamp='{timestmp}' and userid='{userid}'")
+    data=cur.fetchone()
+    print(data)
+    if(data[2]=="PLACED"):
+        cur.execute(f"delete from orders where ord_id={data[3]}")
+        conn.commit()
+        conn.close()
+        return "success"
+    elif(data[2]=="PARTIAL"):
+        cur.execute(f"update orders set qty={data[0]-data[1]}, status='BOOKED', status_qty=0 where ord_id={data[3]}")
+        conn.commit()
+        conn.close()
+        return"success"
+        
     
-    
-#cancelorder("2020-05-20 2000:20:09","aadhith")
 
 
 
