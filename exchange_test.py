@@ -603,7 +603,10 @@ def watchlist(userid,sname,status):
     cur=conn.cursor()
     cur.execute(f"select watchlist from users where userid='{userid}'")
     data=cur.fetchone()[0]
-    wlist=data.split(",")
+    try:
+        wlist=data.split(",")
+    except:
+        wlsit=[]
     if(sname=="0"):
         cur.close()
         conn.close()
@@ -693,8 +696,16 @@ def portfolio(userid):
         return d_f
             
     
-
-portfolio("aadhith")
+def checkticker(sname):
+    conn=sqlite3.connect(url+"market.db")
+    cur=conn.cursor()
+    cur.execute(f"select * from market where ticker='{sname}'")
+    if(len(cur.fetchall())==0):
+        conn.close()
+        return 0
+    else:
+        conn.close()
+        return 1
     
 
 

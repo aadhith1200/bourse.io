@@ -229,10 +229,11 @@ def watchlist():
         sname=request.url.split("=")[1]
         d=exchange_test.watchlist(userid,sname,"add")
         if(d=="already exist"):
-            print(d)
+            flash("Already in Watchlist!")
+            return redirect(url_for('home'))
         if(d=="success"):
             flash("Added to Watchlist!")
-        return redirect("http://localhost:5000/")
+            return redirect(url_for('home'))
     
     else:
         url=request.url.split("=")
@@ -243,8 +244,8 @@ def watchlist():
             sname=url[1]
             d=exchange_test.watchlist(userid,sname,"remove")
             if(d=="success"):
-                print("success")
-            return redirect("http://localhost:5000/")
+                flash("Removed from Watchlist")
+                return redirect(url_for('home'))
     
     
 @app.route('/dashboard_right',methods=['GET','POST'])
@@ -277,9 +278,18 @@ def stockpage():
         return render_template('login.html')
     ticker= request.args['ticker']
     ticker=ticker.split("(")
+    print(ticker)
+    if(len(ticker)!=2):
+        flash("Invalid Stock")
+        return redirect(url_for('home'))
     sname=ticker[0][:-1]
     tickername=ticker[1][:-1]
-    return render_template("stockpage.html",ticker=tickername,sname=sname)
+    out=exchange_test.checkticker(tickername)
+    if(out==True):
+        return render_template("stockpage.html",ticker=tickername,sname=sname)
+    else:
+        flash("Invalid Stock")
+        return redirect(url_for('home'))
 
 @app.route('/stockdata')
 def stockdata():

@@ -26,7 +26,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav">
           <li class="nav-item ">
-            <a class="nav-link active" href="home">Home
+            <a class="nav-link active" href="/">Home
 
             </a>
           </li>
@@ -87,7 +87,7 @@
                 <th data-field="ticker" data-sortable="true">Symbol</th>
                 <th data-field="ltp" data-sortable="true" data-formatter="changeFormatter">LTP</th>
                 <th data-field="change" data-sortable="true" data-formatter="changeFormatter">Change</th>
-                <th data-field="change_p" data-sortable="true" data-formatter="changeFormatter">Change %</th>
+                <th data-field="change_p" data-sortable="true" data-formatter="change_pFormatter">Change %</th>
                 <th data-field="timestmp" data-sortable="true">Last Traded</th>
                 <th data-field="action" data-formatter="actionformatter"></th>
               </tr>
@@ -110,7 +110,7 @@
               <tr>
                 <th data-field="ticker">Symbol</th>
                 <th data-field="change" data-formatter="changeFormatter">Change</th>
-                <th data-field="change_p" data-formatter="changeFormatter">Change %</th>
+                <th data-field="change_p" data-formatter="change_pFormatter">Change %</th>
               </tr>
             </thead>
           </table>
@@ -260,6 +260,20 @@
       }
       return '<div style="color: ' + color + '">' +
         value +
+        '</div>'
+    }
+
+
+    function change_pFormatter(value, row) {
+      if (row.change < 0) {
+        var color = '#FF0000'
+      } else if (row.change > 0) {
+        var color = '#008000'
+      } else {
+        var color = '#FFFFFF'
+      }
+      return '<div style="color: ' + color + '">' +
+        value + "%" +
         '</div>'
     }
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Flask App </title>
+  <title>{{ticker}}</title>
 
   <!-- Bootstraps Java Scipts Links -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -25,7 +25,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="home">Home
+            <a class="nav-link" href="/">Home
 
             </a>
           </li>
@@ -33,14 +33,14 @@
             <a class="nav-link" href="portfolio">Portfolio</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="orderbook">Order book</a>
+            <a class="nav-link" href="orderbook">Orderbook</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="order">Order</a>
+            <a class="nav-link" href="fund">Funds</a>
           </li>
           <li class="nav-item log">
-            <button type="button" name="button" class="btn btn-light" href="logout">Logout</button>
-          </li>
+               <a href="logout"><button type="button" name="button" class="btn btn-light" >Logout</button></a>
+           </li>
         </ul>
       </div>
     </div>
@@ -66,8 +66,8 @@
       <div class="card" style="background-color:rgba(0,0,0,0);">
         <div class="card-body">
           <div class="col-12 jumbotron p-2 ">
-            <h1> {{sname}} </h1>
-            <h2> NSE:{{ticker}} </h2>
+            <h1 style="css-color:#eeeeee;"> {{sname}} </h1>
+            <h2 style-"css-color:#eeeeee;"> NSE:{{ticker}} </h2>
             <h1 class="ltp" style="display:inline;"></h1>
             <h6 style="display:inline;"> INR</h6>
             <h3 class="change" style="display:inline;"></h3>
@@ -204,6 +204,7 @@ function requestData() {
 
     $(".ltp").text("");
     $(".ltp").text(Math.round(data1[1]));
+    $(".ltp").css("color", "#eeeeee");
 
     if (result[2] > 0) {
       $(".change").text("");
@@ -211,7 +212,7 @@ function requestData() {
       $(".change").css("color", "green")
 
       $(".change_p").text("");
-      $(".change_p").text("(+" + Math.round(result[3]) + "%)");
+      $(".change_p").text(" (+" + Math.round(result[3]) + "%)");
       $(".change_p").css("color", "green")
     } else if (result[2] < 0) {
       $(".change").text("");
@@ -219,7 +220,7 @@ function requestData() {
       $(".change").css("color", "red")
 
       $(".change_p").text("");
-      $(".change_p").text("(-" + Math.round(result[3]) + "%)");
+      $(".change_p").text(" (-" + Math.round(result[3]) + "%)");
       $(".change_p").css("color", "red")
     } else {
       $(".change").text("");
@@ -227,14 +228,14 @@ function requestData() {
 
 
       $(".change_p").text("");
-      $(".change_p").text(Math.round(result[3]) + "%)");
+      $(".change_p").text(" ("+Math.round(result[3]) + "%)");
 
     }
 
     $(".last_traded").text("");
     $(".last_traded").text("Last traded on " + result[4]);
+    $(".last_traded").css("color", "#eeeeee");
 
-    // call it again after one second
     setTimeout(requestData, 2000);
 
   });
