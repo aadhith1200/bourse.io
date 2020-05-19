@@ -91,7 +91,8 @@ def order():
 
     else:
         if request.method == 'POST':
-            if (request.form['order_type']!="buy" or request.form['order_type']!="sell") and type(request.form['qty'])!=int:
+            print(request.form)
+            if (request.form['order_type']!="MRKT" or request.form['order_type']!="LMT") or request.form['qty']=='' or request.form['price']=='':
                 flash("Invalid inputs")
                 return redirect(url_for("home"))
             order_type = str(request.form['order_type'])
@@ -125,7 +126,7 @@ def fund():
 
         funds=exchange_test.funds_disp(session.get('user_name'))
         if request.method == 'POST':
-            if(type(request.form['fund'])!=int or type(request.form['fund'])!=float):
+            if(request.form['fund']==''):
                 flash("Invalid input!")
                 return redirect(url_for("fund"))
             fnd = int(request.form['fund'])
