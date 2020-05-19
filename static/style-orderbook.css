@@ -17,7 +17,7 @@
 
 .navbar-nav{
   font-size: 2rem;
-      margin-left: 26rem;
+      margin-left: 30rem;
       margin-top: 1rem;
       width: 100rem;
 }
@@ -35,11 +35,19 @@ font-family: 'Scada', sans-serif;
 color:white;
 }
 
-.table{
-  opacity: 70%;
+.table {
+  width: 40%;
+  color: white;
+  background-color: #323232;
   text-align: center;
   font-size: 1.5rem;
 }
+
+.card {
+  color: white;
+  background-color: #393e46;
+}
+
 
 .welcome{
   text-align: center;

@@ -68,36 +68,48 @@
    {% endwith %}
 
 
-   <div class="row justify-content-center tbl">
-     <h3 style="text-align:center;position: relative;left: 30%;">Open Orders</h3>
-     <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/orderbookdata?req=open" data-side-pagination="server">
-       <thead>
-         <tr>
-           <th data-field="order" data-sortable="true">Order</th>
-           <th data-field="order_type" data-sortable="true">Order Type</th>
-           <th data-field="ticker" data-sortable="true">Symbol</th>
-           <th data-field="price" data-sortable="true">Price</th>
-           <th data-field="qty_status" data-sortable="true">Pending Quantity</th>
-           <th data-field="timestmp" data-sortable="true">Last Traded</th>
-         </tr>
-       </thead>
-     </table>
+    <div class="row justify-content-center tbl">
+     <div class="card">
+       <div class="card-body" style="color:white;">
+         <h3 style="text-align:center;">Open Orders</h3>
+         <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/orderbookdata?req=open" data-side-pagination="server">
+           <thead>
+             <tr>
+               <th data-field="order" data-sortable="true">Order</th>
+               <th data-field="order_type" data-sortable="true">Order Type</th>
+               <th data-field="ticker" data-sortable="true">Symbol</th>
+               <th data-field="price" data-sortable="true">Price</th>
+               <th data-field="qty_status" data-sortable="true">Pending Quantity</th>
+               <th data-field="timestmp" data-sortable="true">Last Traded</th>
+             </tr>
+           </thead>
+         </table>
+       </div>
+     </div>
+
    </div>
    <div class="row justify-content-center tbl" style="margin-top:6.5rem;">
-     <h3 style="text-align:center;position: relative;left: 30%;">Executed Orders</h3>
-     <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="/orderbookdata?req=exec" data-side-pagination="server">
-       <thead>
-         <tr>
-           <th data-field="order" data-sortable="true">Order</th>
-           <th data-field="order_type" data-sortable="true">Order Type</th>
-           <th data-field="ticker" data-sortable="true">Symbol</th>
-           <th data-field="price" data-sortable="true">Price</th>
-           <th data-field="qty_status" data-sortable="true">Quantity</th>
-           <th data-field="timestmp" data-sortable="true">Last Traded</th>
+     <div class="card">
+       <div class="card-body" style="color:white;">
+         <h3 style="text-align:center;">Executed Orders</h3>
+         <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/orderbookdata?req=exec" data-side-pagination="server">
+           <thead>
+             <tr>
+               <th data-field="order" data-sortable="true">Order</th>
+               <th data-field="order_type" data-sortable="true">Order Type</th>
+               <th data-field="ticker" data-sortable="true">Symbol</th>
+               <th data-field="price" data-sortable="true">Price</th>
+               <th data-field="qty_status" data-sortable="true">Quantity</th>
+               <th data-field="timestmp" data-sortable="true">Last Traded</th>
 
-         </tr>
-       </thead>
-     </table>
+             </tr>
+           </thead>
+         </table>
+
+       </div>
+     </div>
+   </div>
+
 
 
 
