@@ -122,7 +122,9 @@ def fund():
 
         funds=exchange_test.funds_disp(session.get('user_name'))
         if request.method == 'POST':
-
+            if(type(request.form['fund'])!=int or type(request.form['fund'])!=float):
+                flash("Invalid input!")
+                return redirect(url_for("fund"))
             fnd = int(request.form['fund'])
             flag = request.form['flag']
             print(fnd,flag)
