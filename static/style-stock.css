@@ -176,3 +176,29 @@ input[type=submit] {
   background-color: #eeeeee;
   border:0;
 }
+
+.logo {
+  height: 4rem;
+}
+
+.dropdown-menu{
+  color:white;
+  background-color: #393e46;
+}
+
+.dropdown-item{
+  color:white;
+}
+
+.navbar-nav{
+      font-size: 2rem;
+      margin-left: 33rem;
+      margin-top: 1rem;
+      width: 100%;
+      left:auto;
+      right:0;
+}
+
+.dropdown-toggle::after {
+            content: none;
+}
