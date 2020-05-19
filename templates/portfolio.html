@@ -67,20 +67,23 @@
    {% endwith %}
 
 
-   <div class="row justify-content-center tbl">
-     <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/portfoliodata" data-side-pagination="server">
-       <thead>
-         <tr>
-           <th data-field="ticker" data-sortable="true" >Symbol</th>
-           <th data-field="ltp" data-sortable="true" data-formatter="changeFormatter">LTP</th>
-           <th data-field="change" data-sortable="true" data-formatter="changeFormatter">Change</th>
-           <th data-field="change_p" data-sortable="true" data-formatter="changeFormatter">Change %</th>
-           <th data-field="qty" data-sortable="true">Quantity</th>
-         </tr>
-       </thead>
-     </table>
+<div class="row tbl justify-content-center">
+     <div class="card">
+       <div class="card-body" style="color:white;">
+         <table class="table table-hover table-dark" id="table" data-toggle="table" data-show-refresh="true" data-auto-refresh="true" data-url="http://localhost:5000/portfoliodata" data-side-pagination="server">
+           <thead>
+             <tr>
+               <th data-field="ticker" data-sortable="true" >Symbol</th>
+               <th data-field="ltp" data-sortable="true" data-formatter="changeFormatter">LTP</th>
+               <th data-field="change" data-sortable="true" data-formatter="changeFormatter">Change</th>
+               <th data-field="change_p" data-sortable="true" data-formatter="changeFormatter">Change %</th>
+               <th data-field="qty" data-sortable="true">Quantity</th>
+             </tr>
+           </thead>
+         </table>      
+       </div>
+     </div>
    </div>
-
 
 
      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
