@@ -77,14 +77,6 @@ body {
   font-family: 'Russo One', sans-serif;
   color: #8d9dbb;
 }
-
-.navbar-nav {
-  font-size: 2rem;
-  margin-left: 30rem;
-  margin-top: 1rem;
-  width: 100rem;
-}
-
 .symbol {
   height: 2.25rem;
   margin: auto;
