@@ -47,6 +47,18 @@
   </nav>
 
   <br>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-dark alert-dismissible msg" role="alert">
+      {{ message  }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
   <br>
 
   <div class="row">
