@@ -1,4 +1,4 @@
-import flask,json,psycopg2,sqlite3
+import flask,json,sqlite3
 from mailer import Mailer
 from mailer import Message
 from pathlib import Path
@@ -7,7 +7,6 @@ from time import time
 app=flask.Flask(__name__)
 
 url=str(Path(__file__).parent.absolute())+"\\"
-market_db={'SBI':17,'HDFC':25}
 def order(order,order_type,price,ticker,qty,name):
     data={'ord':order,'order_type':order_type,'price':price,'ticker':ticker,'qty':qty,'id':name}
     qty_init=data['qty']
@@ -667,6 +666,8 @@ def cancelorder(timestmp,userid):
         conn.commit()
         conn.close()
         return"success"
+        
+    
         
     
 
