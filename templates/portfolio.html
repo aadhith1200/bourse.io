@@ -94,9 +94,9 @@
    <script>
      function changeFormatter(value, row) {
        // 16777215 == ffffff in decimal
-       if (row.change > 0) {
+       if (row.change < 0) {
          var color = '#FF0000'
-       } else if (row.change < 0) {
+       } else if (row.change > 0) {
          var color = '#008000'
        } else {
          var color = '#FFFFFF'

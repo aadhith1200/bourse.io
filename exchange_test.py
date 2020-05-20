@@ -536,6 +536,7 @@ def stockdata(sname):
     cur.execute(f"select * from market where ticker='{sname}'")
     data=cur.fetchone()
     data=list(data)
+    data[-2]=round(data[-2],2)
     data[-1]=str(datetime.strptime(data[-1], '%Y-%m-%d %H:%M:%S').strftime("%d %B %Y %I:%M:%S %p"))
     data[0]=time()*1000
     return data
@@ -626,7 +627,7 @@ def portfolio(userid):
     url2=url+"portfolio.db"
     cur.execute(f"attach '{url1}' as 'market'")
     cur.execute(f"attach '{url2}' as 'port'")
-    cur.execute(f"select a.ticker,price,change,change_p,qty from port.{userid} a inner join market.market b on b.ticker=a.ticker")
+    cur.execute(f"select a.ticker,price,change,change_p,qty from port.{userid} a inner join market.market b on b.ticker=a.ticker and qty!=0")
     data=cur.fetchall()
     conn.close()
     if(len(data)==0):
