@@ -8,6 +8,7 @@ app=flask.Flask(__name__)
 
 url=str(Path(__file__).parent.absolute())+"\\"
 def order(order,order_type,price,ticker,qty,name):
+    response="no"
     data={'ord':order,'order_type':order_type,'price':price,'ticker':ticker,'qty':qty,'id':name}
     qty_init=data['qty']
     if(data['order_type']=="MRKT"):
@@ -105,6 +106,7 @@ def order(order,order_type,price,ticker,qty,name):
                     cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'BUY','MRKT',qty_init,d_p,data['ticker'],'PLACED',data['qty']))
                     conn.commit()
                     conn.close()
+                    response="yes"
 
 
         elif(data['ord']=="SELL"):
@@ -209,6 +211,7 @@ def order(order,order_type,price,ticker,qty,name):
                         cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'SELL','MRKT',qty_init,d_p,data['ticker'],'PLACED',data['qty']))
                         conn.commit()
                         conn.close()
+                        response="yes"
 
     elif(data['order_type']=="LMT"):
         conn=sqlite3.connect(url+"orders.db")
@@ -261,7 +264,7 @@ def order(order,order_type,price,ticker,qty,name):
                         cur2=conn2.cursor()
                         check=cur2.execute(f"select * from {data['id']} where ticker='{data['ticker']}'")
                         if(len(check.fetchall())==0):
-                            cur2.execute(f"insert into {data['id']}(ticker,qty) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
+                            cur2.execute(f"insert into {data['id']}(ticker,qty,avgprice) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
                             conn2.commit()
                         else:
                             cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice=avgprice+{data['qty']*d_p} where ticker='{data['ticker']}'")
@@ -306,7 +309,7 @@ def order(order,order_type,price,ticker,qty,name):
                     cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'BUY','LMT',qty_init,data['price'],data['ticker'],'PLACED',data['qty']))
                     conn.commit()
                     conn.close()
-
+                    response="yes"
 
         elif(data['ord']=="SELL"):
                 query="select * from orders where ticker='"+str(data['ticker'])+"' and ord='BUY' order by timestamp;"
@@ -366,7 +369,7 @@ def order(order,order_type,price,ticker,qty,name):
                             cur2=conn2.cursor()
                             check=cur2.execute(f"select * from {d_userid} where ticker='{data['ticker']}'")
                             if(len(check.fetchall())==0):
-                                cur2.execute(f"insert into {d_userid}(ticker,qty) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
+                                cur2.execute(f"insert into {d_userid}(ticker,qty,avgprice) values('{data['ticker']}',{data['qty']},{data['qty']*d_p})")
                                 conn2.commit()
                             else:
                                 cur2.execute(f"update {d_userid} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'),avgprice=avgprice+{data['qty']*d_p} where ticker='{data['ticker']}'")
@@ -411,8 +414,9 @@ def order(order,order_type,price,ticker,qty,name):
                         cur.execute("insert into orders(ord_id, userid, ord, order_type, qty, price,ticker,status,status_qty) values(?, ?, ?, ?, ?, ?, ?, ?, ?)",(d_id+1,data['id'],'SELL','LMT',qty_init,data['price'],data['ticker'],'PLACED',data['qty']))
                         conn.commit()
                         conn.close()
+                        response="yes"
 
-    d={"status":"PLACED"}
+    d={"status":"PLACED","response":response}
     return(d)
 
 
@@ -425,7 +429,7 @@ def register(userid,passwd,name,funds,email):
         conn.commit()
         conn=sqlite3.connect(url+"portfolio.db")
         cur=conn.cursor()
-        cur.execute(f"create table {data['userid']}(ticker text, qty int, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, avgprice int)")
+        cur.execute(f"create table {data['userid']}(ticker text, qty int, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, avgprice int, primaryqty int default 0)")
         conn.commit()
         conn.close()
         return True
@@ -536,8 +540,9 @@ def stockdata(sname):
     cur.execute(f"select * from market where ticker='{sname}'")
     data=cur.fetchone()
     data=list(data)
-    data[-2]=round(data[-2],2)
-    data[-1]=str(datetime.strptime(data[-1], '%Y-%m-%d %H:%M:%S').strftime("%d %B %Y %I:%M:%S %p"))
+    print(data)
+    data[-4]=round(data[-4],2)
+    data[-3]=str(datetime.strptime(data[-3], '%Y-%m-%d %H:%M:%S').strftime("%d %B %Y %I:%M:%S %p"))
     data[0]=time()*1000
     return data
 
@@ -667,6 +672,38 @@ def cancelorder(timestmp,userid):
         conn.commit()
         conn.close()
         return"success"
+    
+def primaryorder(ticker,qty,userid):
+    print(qty,ticker)
+    conn=sqlite3.connect(url+"portfolio.db")
+    cur=conn.cursor()
+    url1=url+"market.db"
+    url2=url+"portfolio.db"
+    cur.execute(f"attach '{url1}' as 'market'")
+    cur.execute(f"attach '{url2}' as 'port'")
+    cur.execute(f"select a.primaryqty, b.primaryprice, b.primaryqty from port.{userid} a inner join market.market b on b.ticker=a.ticker where a.ticker='{ticker}'")
+    data=cur.fetchall()[0]
+    if(data[0]+qty>10):
+        return ["primary limit",10-data[0]]
+    elif(data[2]+qty>100):
+        return ["primary market limit",100-data[2]]
+    elif(data[2]+qty<=100 and data[0]+qty<=10):
+        cur.execute(f"update market.market set primaryqty=primaryqty+{qty} where ticker='{ticker}'")
+        conn.commit()
+        cur.execute(f"update port.{userid} set primaryqty=primaryqty+{qty}, qty=qty+{qty}, avgprice=avgprice+{qty*data[1]}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime') where ticker='{ticker}'")
+        conn.commit()
+        conn.close()
+        conn2=sqlite3.connect(url+"users.db")
+        cur2=conn2.cursor()
+        cur2.execute(f"update users set funds=funds-{data[1]*qty} where userid='{userid}'")
+        conn2.commit()
+        conn2.close()
+        return ["success",data[1]]
+    else:
+        return ["error",0]
+        
+
+    
         
     
         

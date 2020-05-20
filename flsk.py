@@ -9,6 +9,7 @@ from flask_cors import CORS
 from time import time
 
 app = Flask(__name__)
+app.secret_key = os.urandom(12)
 CORS(app)
 s = URLSafeTimedSerializer('Thisisasecret!')
 @app.route('/',methods=['GET', 'POST'])
@@ -91,9 +92,24 @@ def order():
 
     else:
         if request.method == 'POST':
-            if (request.form['order_type']!="MRKT" and request.form['order_type']!="LMT") or request.form['qty']=='' or request.form['price']=='':
+            if (request.form['market']!="Primary" and request.form['market']!="Secondary") or request.form['qty']=='' or request.form['price']=='':
                 flash("Invalid inputs")
                 return redirect(f"/stockpage?ticker={request.args['sname']} ({request.args['ticker']})")
+            if (request.form['market']=="Primary"):
+                out=exchange_test.primaryorder(request.args['ticker'].upper(), int(request.form['qty']), session.get("user_name"))
+                if(out[0]=="success"):
+                    flash(f"Order executed successfully at {out[1]} per share! Check your portfolio!")
+                    return stock()
+                elif(out[0]=="primary limit"):
+                    flash(f"You can only buy {out[1]} shares as your primary market limit for this stock is reached! You can always buy from secondary market.")
+                    return stock()
+                elif(out[0]=="primary market limit"):
+                    flash(f"You can only buy {out[1]} shares as the primary market limit for this stock is reached! You can always buy from secondary market.")
+                    return stock()
+            if (request.form['order_type']!="MRKT" and request.form['order_type']!="LMT") or (request.form['market']!="Primary" and request.form['market']!="Secondary") or request.form['qty']=='' or request.form['price']=='':
+                flash("Invalid inputs")
+                return redirect(f"/stockpage?ticker={request.args['sname']} ({request.args['ticker']})")    
+
             order_type = str(request.form['order_type'])
             order = request.args['ord'].upper()
             ticker = request.args['ticker'].upper()
@@ -104,9 +120,11 @@ def order():
                 price = 'NULL'
             print(order,order_type,price,ticker,qty,session.get('user_name'))
             out=exchange_test.order(order,order_type,price,ticker,qty,session.get('user_name'))
-            if out['status'] == "PLACED":
-                flash('Order placed successfully!, Check your orderbook!')
-                print('Order placed successfully!, Check your orderbook!')
+            if out['status'] == "PLACED" and out['response'] == "yes":
+                flash('Order placed successfully!, Check your Orderbook!')
+                return stock()
+            if out['status'] == "PLACED" and out['response'] == "no":
+                flash('Order executed successfully!, Check your Portfolio!')
                 return stock()
             elif out['status'] == "insufficient":
                 flash('Insufficient Funds!')
@@ -334,5 +352,4 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 if __name__ == "__main__":
-    app.secret_key = os.urandom(12)
     app.run(debug=True,use_reloader=False,port=5000)
