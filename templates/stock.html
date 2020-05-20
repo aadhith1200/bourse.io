@@ -43,6 +43,7 @@
               <i class="fas fa-user-circle fa-3x"></i>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">{{user}}</a>
               <a class="dropdown-item" href="reset-password/loggedin=true">Reset Password</a>
               <a class="dropdown-item" href="logout">Logout</a>
             </div>
@@ -299,7 +300,7 @@
 
         } else if (result[0] < 0) {
           $(".pl").text("");
-          $(".pl").text("-" + (result[0]));
+          $(".pl").text("" + (result[0]));
           $(".pl").css("color", "red")
 
           $(".pl_change").text("");

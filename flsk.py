@@ -17,7 +17,7 @@ def home():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return render_template('stock.html')
+        return render_template('stock.html',user=session['user_name'])
 
 @app.route('/stock')
 def stock():
@@ -72,7 +72,7 @@ def portfolio():
     if not session.get('logged_in'):
         return render_template('login.html')
     
-    return render_template('portfolio.html')
+    return render_template('portfolio.html',user=session['user_name'])
 
 @app.route('/orderbook', methods=['GET','POST'])
 def orderbook():
@@ -81,7 +81,7 @@ def orderbook():
         return render_template('login.html')
 
     else:
-        return render_template('orderbook.html')
+        return render_template('orderbook.html',user=session['user_name'])
     
 @app.route('/order', methods=['GET','POST'])
 
@@ -158,10 +158,10 @@ def fund():
                     return stock()
             else:
                 flash('Wrong Input!')
-                return render_template('fund.html',funds=funds)
+                return render_template('fund.html',funds=funds,user=session['user_name'])
 
         else:
-            return render_template('fund.html',funds=funds)
+            return render_template('fund.html',funds=funds,user=session['user_name'])
 
 @app.route('/forgot-password', methods=['GET','POST'])
 def forgot_password():
@@ -250,6 +250,8 @@ def orderbookdata():
     
 @app.route('/watchlist',methods=['GET','POST'])
 def watchlist():
+    if not session.get('logged_in'):
+        return render_template('login.html')
     userid=session['user_name']
     if request.method=="POST":
         sname=request.url.split("=")[1]
@@ -276,6 +278,8 @@ def watchlist():
     
 @app.route('/dashboard_right',methods=['GET','POST'])
 def dashboard_right():
+    if not session.get('logged_in'):
+        return render_template('login.html')
     userid=session['user_name']
     if(request.url.split("=")[1]=='total'):
         data=exchange_test.pandl(userid,'total')
@@ -311,7 +315,7 @@ def stockpage():
     tickername=ticker[1][:-1]
     out=exchange_test.checkticker(tickername)
     if(out==True):
-        return render_template("stockpage.html",ticker=tickername,sname=sname)
+        return render_template("stockpage.html",ticker=tickername,sname=sname,user=session['user_name'])
     else:
         flash("Invalid Stock")
         return redirect(url_for('home'))

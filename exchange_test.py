@@ -235,7 +235,7 @@ def order(order,order_type,price,ticker,qty,name):
                     if (d_type=="MRKT"):
                         d_p=data['price']
                     if (d_type=="LMT" and data['price']>=d_p):
-                        d_p=(data['price']+d_p)//2.0
+                        d_p=d_p
                     if (d_type=="LMT" and data['price']<d_p):
                         continue
                     if(int(d_qty)<int(data['qty'])):
@@ -329,8 +329,10 @@ def order(order,order_type,price,ticker,qty,name):
                         d={"status":"insufficient"}
                         return(d)
                     con.close()
+                    print(orders)
                     for i in range(len(orders)):
                         op=orders[i]
+                        print(op)
                         d_id=op[0]
                         d_p=op[5]
                         d_userid=op[1]
@@ -341,7 +343,7 @@ def order(order,order_type,price,ticker,qty,name):
                         if (d_type=="MRKT"):
                             d_p=data['price']
                         if (d_type=="LMT" and data['price']<=d_p):
-                            d_p=(data['price']+d_p)//2.0
+                            d_p=d_p
                         if (d_type=="LMT" and data['price']>d_p):
                             continue
                         if(int(d_qty)<int(data['qty'])):
@@ -602,7 +604,7 @@ def pandl(userid,status):
     url2=url+"portfolio.db"
     cur.execute(f"attach '{url1}' as 'market'")
     cur.execute(f"attach '{url2}' as 'port'")
-    cur.execute(f"select avgprice,qty,price,a.ticker from port.{userid} a inner join market.market b on b.ticker=a.ticker")
+    cur.execute(f"select avgprice,qty,price,a.ticker from port.{userid} a inner join market.market b on b.ticker=a.ticker and qty!=0")
     data=cur.fetchall()
     conn.close()
     if(len(data)==0):
@@ -701,11 +703,6 @@ def primaryorder(ticker,qty,userid):
         return ["success",data[1]]
     else:
         return ["error",0]
-        
-
-    
-        
-    
         
     
 
