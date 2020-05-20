@@ -123,6 +123,17 @@
             <form class="frm" action="/order" method="post">
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect0">Market type</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect0" onchange="mselect();" name="order_type">
+                  <option selected>Select</option>
+                  <option value="Primary">Primary</option>
+                  <option value="Secondary">Secondary</option>
+                </select>
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
                   <label class="input-group-text" for="inputGroupSelect01">Order type</label>
                 </div>
                 <select class="custom-select" id="inputGroupSelect01" onchange="ddselect();" name="order_type">
@@ -147,11 +158,11 @@
               </div>
 
               <div class="form-group">
-                <input type="submit" value="Sell" class="btn float-right sell" formaction="\order?ticker={{ticker}}&ord=sell&sname={{sname}}">
+                <input type="submit" value="Sell" id="sell" class="btn float-right sell" formaction="\order?ticker={{ticker}}&ord=sell&sname={{sname}}">
               </div>
 
               <div class="form-group">
-                <input type="submit" value="Buy" class="btn float-left buy" formaction="\order?ticker={{ticker}}&ord=buy&sname={{sname}}">
+                <input type="submit" value="Buy" id="buy" class="btn float-left buy" formaction="\order?ticker={{ticker}}&ord=buy&sname={{sname}}">
               </div>
 
             </form>
@@ -316,6 +327,26 @@ function ddselect() {
 
   if (type.localeCompare("LMT") == 0) {
     document.getElementById("price").removeAttribute('readonly');
+  }
+}
+
+function mselect() {
+  var d = document.getElementById("inputGroupSelect0");
+  var type = d.options[d.selectedIndex].text;
+  var null_value = "-"
+  if (type.localeCompare("Primary") == 0) {
+    document.getElementById("inputGroupSelect01").disabled = true;
+    document.getElementById("price").value = null_value;
+    document.getElementById("price").setAttribute('readonly', true);
+    document.getElementById("sell").style.visibility='hidden';
+    document.getElementById("buy").style.width='10rem';
+  }
+
+  if (type.localeCompare("Secondary") == 0) {
+    document.getElementById("inputGroupSelect01").disabled = false;
+    document.getElementById("price").removeAttribute('readonly');
+    document.getElementById("sell").style.visibility='visible';
+    document.getElementById("buy").style.width='';
   }
 
 }
