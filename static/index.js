@@ -1,17 +1,12 @@
 var chart;
 
 function requestData() {
-  // Ajax call to get the Data from Flask
   var requests = $.get('/data');
 
   var tm = requests.done(function(result) {
-    // Temperature
     var series = chart.series[0],
       shift = series.data.length > 20;
 
-    // Humidity
-    // Add the Point
-    // Time Temperature\
     var data1 = [];
     data1.push(result[0]);
     data1.push(result[1]);
@@ -49,15 +44,12 @@ function requestData() {
 
     $(".last_traded").text("");
     $(".last_traded").text("Last traded on " + result[4]);
-
-    // call it again after one second
     setTimeout(requestData, 2000);
 
   });
 }
 
 $(document).ready(function() {
-  // --------------Chart 1 ----------------------------
   chart = new Highcharts.Chart({
     chart: {
       renderTo: 'data-container',
@@ -100,7 +92,6 @@ $(document).ready(function() {
   });
 });
 
-// --------------Chart 1 Ends - -----------------
 
 
 function ddselect() {

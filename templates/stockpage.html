@@ -6,7 +6,6 @@
 
   <title>{{ticker}}</title>
 
-  <!-- Bootstraps Java Scipts Links -->
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Scada&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/d963ca7d82.js" crossorigin="anonymous"></script>
@@ -111,7 +110,6 @@
                 }
               </script>
             </div>
-            <!-- TradingView Widget END -->
           </div>
         </div>
       </div>
@@ -179,7 +177,6 @@
   <br>
 
   <div class="container-fluid">
-    <!-- Example row of columns -->
     <div class="row">
       <div class="container-fluid chart" id="data-container">
 
@@ -195,17 +192,15 @@
 
 
 
-  <!-- JQuery links  -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
-  <!--High CHART LIVE  -->
+
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/highcharts-more.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/themes/dark-unica.js"></script>
 
-  <!--Gauge  -->
   <script type="text/javascript" src="https://pubnub.github.io/eon/lib/eon.js"></script>
   <script>
     var chart;
@@ -219,7 +214,6 @@
     }
 
 function requestData() {
-  // Ajax call to get the Data from Flask
   var requests = $.get('/stockdata?stock={{ticker}}');
 
   var tm = requests.done(function(result) {
@@ -271,7 +265,6 @@ function requestData() {
 }
 
 $(document).ready(function() {
-  // --------------Chart 1 ----------------------------
   chart = new Highcharts.Chart({
     chart: {
       renderTo: 'data-container',
@@ -314,7 +307,6 @@ $(document).ready(function() {
   });
 });
 
-// --------------Chart 1 Ends - -----------------
 
 
 function ddselect() {

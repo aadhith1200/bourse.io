@@ -71,7 +71,7 @@ def portfolio():
 
     if not session.get('logged_in'):
         return render_template('login.html')
-    
+
     return render_template('portfolio.html',user=session['user_name'])
 
 @app.route('/orderbook', methods=['GET','POST'])
@@ -82,7 +82,7 @@ def orderbook():
 
     else:
         return render_template('orderbook.html',user=session['user_name'])
-    
+
 @app.route('/order', methods=['GET','POST'])
 
 def order():
@@ -108,7 +108,7 @@ def order():
                     return stock()
             if (request.form['order_type']!="MRKT" and request.form['order_type']!="LMT") or (request.form['market']!="Primary" and request.form['market']!="Secondary") or request.form['qty']=='' or request.form['price']=='':
                 flash("Invalid inputs")
-                return redirect(f"/stockpage?ticker={request.args['sname']} ({request.args['ticker']})")    
+                return redirect(f"/stockpage?ticker={request.args['sname']} ({request.args['ticker']})")
 
             order_type = str(request.form['order_type'])
             order = request.args['ord'].upper()
@@ -118,7 +118,6 @@ def order():
                 price = int(request.form['price'])
             else:
                 price = 'NULL'
-            print(order,order_type,price,ticker,qty,session.get('user_name'))
             out=exchange_test.order(order,order_type,price,ticker,qty,session.get('user_name'))
             if out['status'] == "PLACED" and out['response'] == "yes":
                 flash('Order placed successfully!, Check your Orderbook!')
@@ -148,7 +147,6 @@ def fund():
                 return redirect(url_for("fund"))
             fnd = int(request.form['fund'])
             flag = request.form['flag']
-            print(fnd,flag)
             if exchange_test.funds_update(session.get("user_name"),fnd,flag[0]) == "success":
                 if(flag=="Add"):
                     flash("Funds added successfully")
@@ -196,7 +194,7 @@ def reset_password(token):
                 flash('Password Changed!')
                 session['mode']=""
                 return redirect(url_for("home"))
-    
+
             elif status=="no_match":
                 flash('Password does not match')
                 return render_template('reset_password.html')
@@ -207,8 +205,8 @@ def reset_password(token):
 
         else:
             return render_template('reset_password.html',token="/reset-password/loggedin=true")
-        
-        
+
+
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
     except:
@@ -247,7 +245,7 @@ def orderbookdata():
         return(json.dumps(d))
     else:
         return "error"
-    
+
 @app.route('/watchlist',methods=['GET','POST'])
 def watchlist():
     if not session.get('logged_in'):
@@ -262,10 +260,10 @@ def watchlist():
         if(d=="success"):
             flash("Added to Watchlist!")
             return redirect(url_for('home'))
-    
+
     else:
         url=request.url.split("=")
-        if(url[1]=="asc"):    
+        if(url[1]=="asc"):
             d=exchange_test.watchlist(userid,"0","0")
             return json.dumps(d)
         else:
@@ -274,8 +272,8 @@ def watchlist():
             if(d=="success"):
                 flash("Removed from Watchlist")
                 return redirect(url_for('home'))
-    
-    
+
+
 @app.route('/dashboard_right',methods=['GET','POST'])
 def dashboard_right():
     if not session.get('logged_in'):
@@ -293,15 +291,15 @@ def dashboard_right():
             response = make_response(json.dumps(total))
             response.content_type = 'application/json'
             return response
-    
+
     if(request.url.split('=')[1]=='table&order'):
         data=exchange_test.pandl(userid,'table')
         if(data=="portfolio empty"):
             return data
         else:
             return json.dumps(data)
-        
-    
+
+
 @app.route('/stockpage')
 def stockpage():
     if not session.get('logged_in'):
@@ -342,11 +340,10 @@ def cancelorder():
     op=exchange_test.cancelorder(timestmp,session['user_name'])
     if(op=="success"):
         flash("Order Cancelled")
-        print(op)
         return orderbook()
     else:
         flash("Oops! Something went wrong.")
-    
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404

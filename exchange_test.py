@@ -60,7 +60,7 @@ def order(order,order_type,price,ticker,qty,name):
                         else:
                             cur2.execute(f"update {data['id']} set qty=qty+{data['qty']}, timestamp=datetime(CURRENT_TIMESTAMP, 'localtime'), avgprice=avgprice+{data['qty']*d_p} where ticker='{data['ticker']}'")
                             conn2.commit()
-                        
+
                         cur3=conn2.cursor()
                         cur3.execute(f"select avgprice,qty from {d_userid} where ticker='{data['ticker']}'")
                         avglist=cur3.fetchone()
@@ -329,10 +329,8 @@ def order(order,order_type,price,ticker,qty,name):
                         d={"status":"insufficient"}
                         return(d)
                     con.close()
-                    print(orders)
                     for i in range(len(orders)):
                         op=orders[i]
-                        print(op)
                         d_id=op[0]
                         d_p=op[5]
                         d_userid=op[1]
@@ -493,7 +491,6 @@ def forgot_password(email,link):
             sender.send(message)
             return data[1]
         except:
-            print("error in sending mail!")
             return "1"
 
 
@@ -542,7 +539,6 @@ def stockdata(sname):
     cur.execute(f"select * from market where ticker='{sname}'")
     data=cur.fetchone()
     data=list(data)
-    print(data)
     data[-4]=round(data[-4],2)
     data[-3]=str(datetime.strptime(data[-3], '%Y-%m-%d %H:%M:%S').strftime("%d %B %Y %I:%M:%S %p"))
     data[0]=time()*1000
@@ -625,7 +621,7 @@ def pandl(userid,status):
              d={"ticker":i[3],"change":round(pl,2),"change_p":round(pl_change,2)}
              d_f["rows"].append(d)
         return d_f
-    
+
 
 def portfolio(userid):
     conn=sqlite3.connect(url+"portfolio.db")
@@ -645,8 +641,8 @@ def portfolio(userid):
             d={"ticker":i[0],"ltp":round(i[1],2),"change":round(i[2],2),"change_p":round(i[3],2),"qty":i[4]}
             d_f["rows"].append(d)
         return d_f
-            
-    
+
+
 def checkticker(sname):
     conn=sqlite3.connect(url+"market.db")
     cur=conn.cursor()
@@ -657,13 +653,12 @@ def checkticker(sname):
     else:
         conn.close()
         return 1
-    
+
 def cancelorder(timestmp,userid):
     conn=sqlite3.connect(url+"orders.db")
     cur=conn.cursor()
     cur.execute(f"select qty,status_qty,status,ord_id from orders where timestamp='{timestmp}' and userid='{userid}'")
     data=cur.fetchone()
-    print(data)
     if(data[2]=="PLACED"):
         cur.execute(f"delete from orders where ord_id={data[3]}")
         conn.commit()
@@ -674,9 +669,8 @@ def cancelorder(timestmp,userid):
         conn.commit()
         conn.close()
         return"success"
-    
+
 def primaryorder(ticker,qty,userid):
-    print(qty,ticker)
     conn=sqlite3.connect(url+"portfolio.db")
     cur=conn.cursor()
     url1=url+"market.db"
@@ -703,8 +697,8 @@ def primaryorder(ticker,qty,userid):
         return ["success",data[1]]
     else:
         return ["error",0]
-        
-    
+
+
 
 
 
