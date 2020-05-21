@@ -716,6 +716,25 @@ def primaryorder(ticker,qty,userid):
     else:
         return ["error",0]
 
+def deleteacc(userid):
+    conn=sqlite3.connect(url+"users.db")
+    cur=conn.cursor()
+    cur.execute(f"delete from users where userid='{userid}'")
+    conn.commit()
+    conn.close()
+    conn=sqlite3.connect(url+"portfolio.db")
+    cur=conn.cursor()
+    cur.execute(f"drop table '{userid}'")
+    conn.commit()
+    conn.close()
+    conn=sqlite3.connect(url+"orders.db")
+    cur=conn.cursor()
+    cur.execute(f"delete from orders where userid='{userid}'")
+    conn.commit()
+    conn.close()
+    return 1
+    
+
 
 
 

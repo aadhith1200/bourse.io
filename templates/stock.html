@@ -44,6 +44,7 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a class="dropdown-item" href="#">{{user}}</a>
+              <a class="dropdown-item" onclick="return confirm('Are you sure you want to delete your account?');" href="/deleteaccount">Delete your account</a>
               <a class="dropdown-item" href="reset-password/loggedin=true">Reset Password</a>
               <a class="dropdown-item" href="logout">Logout</a>
             </div>
