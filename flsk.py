@@ -360,6 +360,15 @@ def deleteacc():
         flash("Oops! something went wrong.")
         return stock()
 
+@app.route('/fundschange',methods=['GET','POST'])
+def fundschange():
+    qty=request.args['qty']
+    ticker=request.args['ticker']
+    data=exchange_test.fundschange(qty,ticker,session['user_name'])
+    response = make_response(json.dumps(data))
+    response.content_type = 'application/json'
+    return response
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404

@@ -734,3 +734,44 @@ def deleteacc(userid):
     conn.close()
     return 1
 
+def fundschange(qty,ticker,userid):
+    conn=sqlite3.connect(url+"users.db")
+    cur=conn.cursor()
+    cur.execute(f"select funds from users where userid='{userid}'")
+    funds=cur.fetchone()[0]
+    conn.close()
+    conn2=sqlite3.connect(url+"market.db")
+    cur2=conn2.cursor()
+    cur2.execute(f"select price from market where ticker='{ticker}'")
+    price=cur2.fetchone()[0]
+    try:
+        change=int(funds)-int(price)*int(qty)
+    except:
+        return['']
+    conn2.close()
+    if(change<0):
+        return["Exceeds"]
+    else:
+        return[change]
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

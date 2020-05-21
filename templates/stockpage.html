@@ -160,10 +160,11 @@
               <div class="form-group">
                 <input type="submit" value="Sell" id="sell" class="btn float-right sell" formaction="\order?ticker={{ticker}}&ord=sell&sname={{sname}}">
               </div>
-
               <div class="form-group">
                 <input type="submit" value="Buy" id="buy" class="btn float-left buy" formaction="\order?ticker={{ticker}}&ord=buy&sname={{sname}}">
               </div>
+              <h5 style="text-align:center" class="maxamt"></h5>
+
 
             </form>
           </div>
@@ -344,6 +345,15 @@ function mselect() {
   }
 
 }
+$("#qty").on('change', function(){
+      var requests = $.get('/fundschange?qty='+this.value+'&ticker={{ticker}}');
+      var tm = requests.done(function(result) {
+         $(".maxamt").text("Remaining Funds: "+(result[0]));
+         $(".maxamt").css("font-size", "1.3em");
+         $(".maxamt").css("color", "#eeeeee");
+      });
+
+});
 
   </script>
 
