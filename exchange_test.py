@@ -678,7 +678,25 @@ def primaryorder(ticker,qty,userid):
     cur.execute(f"attach '{url1}' as 'market'")
     cur.execute(f"attach '{url2}' as 'port'")
     cur.execute(f"select a.primaryqty, b.primaryprice, b.primaryqty from port.{userid} a inner join market.market b on b.ticker=a.ticker where a.ticker='{ticker}'")
-    data=cur.fetchall()[0]
+    try:
+        data=cur.fetchall()[0]
+    except:
+        cur.execute(f"select primaryprice,primaryqty from market where ticker='{ticker}'")
+        data=cur.fetchall()[0]
+        if(qty>10):
+            return ["primary limit",10]
+        elif(data[1]+qty>100):
+            return ["primary market limit",100-data[1]]
+        else:
+            cur.execute(f"insert into port.{userid}(ticker,qty,avgprice,primaryqty) values('{ticker}',{qty},{qty*data[0]},{qty})")
+            conn.commit()
+            conn.close()
+            conn2=sqlite3.connect(url+"users.db")
+            cur2=conn2.cursor()
+            cur2.execute(f"update users set funds=funds-{data[1]*qty} where userid='{userid}'")
+            conn2.commit()
+            conn2.close()
+            return ["success",data[0]]
     if(data[0]+qty>10):
         return ["primary limit",10-data[0]]
     elif(data[2]+qty>100):
@@ -697,7 +715,6 @@ def primaryorder(ticker,qty,userid):
         return ["success",data[1]]
     else:
         return ["error",0]
-
 
 
 

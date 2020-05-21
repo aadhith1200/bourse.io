@@ -218,7 +218,7 @@ def reset_password(token):
         if status=="success":
             flash('Password Changed!')
             session['mode']=""
-            return home()
+            return redirect("/")
 
         elif status=="no_match":
             flash('Password does not match')
