@@ -187,26 +187,29 @@ def forgot_password():
 
 @app.route('/reset-password/<token>', methods=['GET','POST'])
 def reset_password(token):
-    if(session['logged_in']):
-        if request.method == 'POST':
-            status = exchange_test.reset_password(request.form.get('pwd'),request.form.get('cnf_pwd'),session.get('user_name'))
-            if status=="success":
-                flash('Password Changed!')
-                session['mode']=""
-                return redirect(url_for("home"))
-
-            elif status=="no_match":
-                flash('Password does not match')
-                return render_template('reset_password.html')
-
+    try:
+        if(session['logged_in']):
+            if request.method == 'POST':
+                status = exchange_test.reset_password(request.form.get('pwd'),request.form.get('cnf_pwd'),session.get('user_name'))
+                if status=="success":
+                    flash('Password Changed!')
+                    session['mode']=""
+                    return redirect(url_for("home"))
+    
+                elif status=="no_match":
+                    flash('Password does not match')
+                    return render_template('reset_password.html')
+    
+                else:
+                    flash('Oops! Something went wrong.')
+                    return home()
+    
             else:
-                flash('Oops! Something went wrong.')
-                return home()
+                return render_template('reset_password.html',token="/reset-password/loggedin=true")
 
-        else:
-            return render_template('reset_password.html',token="/reset-password/loggedin=true")
-
-
+    except:
+        pass
+    
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
     except:
@@ -356,7 +359,7 @@ def deleteacc():
     else:
         flash("Oops! something went wrong.")
         return stock()
-    
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404
