@@ -429,7 +429,7 @@ def register(userid,passwd,name,funds,email):
         conn.commit()
         conn=sqlite3.connect(url+"portfolio.db")
         cur=conn.cursor()
-        cur.execute(f"create table {data['userid']}(ticker text, qty int, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, avgprice int, primaryqty int default 0)")
+        cur.execute(f"create table {data['userid']}(ticker text primary key, qty int, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, avgprice int, primaryqty int default 0)")
         conn.commit()
         conn.close()
         return True
