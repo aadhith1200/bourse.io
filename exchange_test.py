@@ -693,7 +693,7 @@ def primaryorder(ticker,qty,userid):
             conn.close()
             conn2=sqlite3.connect(url+"users.db")
             cur2=conn2.cursor()
-            cur2.execute(f"update users set funds=funds-{data[1]*qty} where userid='{userid}'")
+            cur2.execute(f"update users set funds=funds-{data[0]*qty} where userid='{userid}'")
             conn2.commit()
             conn2.close()
             return ["success",data[0]]
@@ -733,9 +733,4 @@ def deleteacc(userid):
     conn.commit()
     conn.close()
     return 1
-    
-
-
-
-
 
