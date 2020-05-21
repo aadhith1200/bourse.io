@@ -24,6 +24,6 @@ $ python flsk.py
 ## Authors
 
 * Aadhith Narayan M - [aadhith1200](https://github.com/aadhith1200)
-* Lakshminarayanan R -  [Shuki30](https://github.com/Shuki30)
+* Shuki Varsun J -  [Shuki30](https://github.com/Shuki30)
 
 
