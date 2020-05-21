@@ -21,11 +21,6 @@ $ pip3 install -r requirements.txt
 $ python flsk.py
 ```
 
-
-## Features
-
-Yet to be added
-
 ## Authors
 
 * Aadhith Narayan M - [aadhith1200](https://github.com/aadhith1200)
